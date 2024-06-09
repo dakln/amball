@@ -14,6 +14,7 @@ export class GameRoomState extends Schema {
   @type (Table) table = new Table();
   @type(Table) checkingTable = new Table();
   @type(Table) droppedTable = new Table();
+  @type(["string"]) droppedCardValues = new ArraySchema<string>();
   @type("string") currentFakeCardName: string = "";
 
   @type("string") previousTurnBy: string = ""; // SessionId of player
@@ -47,6 +48,29 @@ export class GameRoomState extends Schema {
     }
   }
 
+  checkPlayerCardsForStack(sessionId: string) {
+    setTimeout(() => {
+      const player = this.players.get(sessionId);
+      const valueCounts: any = {
+        "6": 0,
+        "7": 0,
+        "8": 0,
+        "9": 0,
+        "10": 0,
+        "Jack": 0,
+        "Queen": 0,
+        "King": 0,
+        "Ace": 0
+      }
+      player.cards.forEach(card => {
+        valueCounts[card.value]++
+      })
+  
+      for (const [value, count] of Object.entries(valueCounts)) {
+        if (count === 4) player.dropSimilarCardsByValue(value);
+      }
+    }, 700)
+  }
 
   dealCardsToPlayer(cardsCount: number, sessionId: string) {
     const player = this.players.get(sessionId);
@@ -59,6 +83,7 @@ export class GameRoomState extends Schema {
         player.cards.push(card);
         index++;
 
+        if (index === cardsCount) this.checkPlayerCardsForStack(sessionId);
         interval *= CARD_SPEED_MULTIPLIER;
         if (interval < CARD_MIN_INTERVAL) interval = CARD_MIN_INTERVAL
         setTimeout(dealNextCard, interval);
@@ -136,6 +161,7 @@ export class GameRoomState extends Schema {
             index++;
 
             if (index === cardsCount) {
+              this.checkPlayerCardsForStack(sessionId);
               setTimeout(() => {
                 this.table.clear();
                 this.endRound();
@@ -184,7 +210,7 @@ export class GameRoomState extends Schema {
 
   nextRound() {
 
-
+    this.room.broadcast("shuffleEnemyCards");
     this.room.broadcast("nextRound");
     this.checkingTable.clear();
     this.table.clear();

@@ -78,6 +78,7 @@ export class Player extends Schema {
     }
 
     dropSimilarCardsByValue(cardValue: string) {
+        this.room.state.droppedCardValues.push(cardValue);
         const droppingCards: any[] = []
         this.cards.forEach(card => {
             if (card.value === cardValue) droppingCards.push(card);

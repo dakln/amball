@@ -42,7 +42,7 @@ export class GameRoom extends Room<GameRoomState> {
     console.log(client.sessionId, "joined!");
     this.state.createPlayer(client.sessionId, options, this);
 
-    if (this.state.players.size === 1) {
+    if (this.state.players.size === 2) {
       setTimeout(() => {
         this.state.startGame();
       }, 1000)
