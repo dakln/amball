@@ -3,11 +3,11 @@ import { Card, CARD_MAX_INTERVAL, CARD_MIN_INTERVAL, CARD_SPEED_MULTIPLIER } fro
 import { GameRoom } from "../GameRoom";
 import { findCardByName, findCardByValue } from "./MiscFunctions";
 
-export const START_CARDS_COUNT = 18;
+export const START_CARDS_COUNT = 9;
 
 export class Player extends Schema {
     private room: GameRoom;
-
+    @type("number") playerNumber: number;
     @type("string") sessionId: string;
     @type("string") username: string;
     @type([ Card ]) cards = new ArraySchema<Card>();
@@ -18,7 +18,21 @@ export class Player extends Schema {
         this.sessionId = sessionId;
         this.username = options.username;
         this.room = room;
+        
     }
+
+    removeCard(cardIndex: number) {
+        this.cards.splice(cardIndex, 1);
+
+        this.room.broadcast('updatePlayerHand', this.sessionId);
+    }
+
+    addCard(card: Card) {
+        this.cards.push(card);
+        //console.log('Adding card to', this.sessionId);
+        // send update my hand
+        this.room.broadcast('addCardToPlayer', {sessionId: this.sessionId, cardName: card.name});
+    } 
 
     selectCard(cardName: string) {
         const card = findCardByName(this.cards, cardName)
@@ -71,28 +85,24 @@ export class Player extends Schema {
         const cardIndex = this.cards.indexOf(card);
         const selectedCardIndex = this.selectedCards.indexOf(card);
         
-        this.cards.splice(cardIndex, 1);
+        this.removeCard(cardIndex);
 
         this.room.state.table.addCard(card, this.sessionId);
         this.room.state.checkingTable.addCard(card, this.sessionId);
     }
 
-    dropSimilarCardsByValue(cardValue: string) {
-        this.room.state.droppedCardValues.push(cardValue);
-        const droppingCards: any[] = []
-        this.cards.forEach(card => {
-            if (card.value === cardValue) droppingCards.push(card);
-        })
-        const cardsCount = droppingCards.length;
+    dropSelectedCards() {
+        const cardsCount = this.selectedCards.length;
         let index = 0;
         let interval = CARD_MAX_INTERVAL;
     
         const dropNextCard = () => {
             if (index < cardsCount) {
-                const card = droppingCards[index];
+                const card = this.selectedCards[index];
                 this.dropCard(card);
                 index++;
     
+                if (index === cardsCount) this.selectedCards.clear();
                 // Увеличиваем интервал с учетом количества карт
                 interval *= CARD_SPEED_MULTIPLIER;
                 if (interval < CARD_MIN_INTERVAL) interval = CARD_MIN_INTERVAL
@@ -109,7 +119,7 @@ export class Player extends Schema {
 
         const cardIndex = this.cards.indexOf(card);
         
-        this.cards.splice(cardIndex, 1);
+        this.removeCard(cardIndex);
 
         this.room.state.droppedTable.addCard(card, this.sessionId);
     }

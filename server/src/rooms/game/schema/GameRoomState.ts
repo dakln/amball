@@ -28,9 +28,11 @@ export class GameRoomState extends Schema {
 
   @type({ map: Player }) players = new MapSchema<Player>();
 
+  
   constructor(room: GameRoom) {
       super();
       this.room = room;
+
   }
 
   startGame() {
@@ -43,36 +45,52 @@ export class GameRoomState extends Schema {
         this.dealCardsToPlayer(START_CARDS_COUNT, player.sessionId);
       });
 
-      // Set turn to random player
-      this.currentTurnBy = availablePlayers[Math.floor(Math.random() * availablePlayers.length)];
+      // const interval = 1500;
+      // let index = 0
+      // const dealToNextPlayer = () => {
+      //   const playerSessionId = availablePlayers[index];
+      //   this.dealCardsToPlayer(START_CARDS_COUNT, playerSessionId);
+      //   index++
+
+      //   setTimeout(dealToNextPlayer, interval);
+      // }
+
+      // dealToNextPlayer();
+      
+      //this.currentTurnBy = availablePlayers[Math.floor(Math.random() * availablePlayers.length)];
+
+      // set turn to 1st player
+      this.players.forEach(player => {
+          if (player.playerNumber === 1) {
+            this.currentTurnBy = player.sessionId;
+          }
+      })
     }
   }
 
-  checkPlayerCardsForStack(sessionId: string) {
-    setTimeout(() => {
-      const player = this.players.get(sessionId);
-      const valueCounts: any = {
-        "6": 0,
-        "7": 0,
-        "8": 0,
-        "9": 0,
-        "10": 0,
-        "Jack": 0,
-        "Queen": 0,
-        "King": 0,
-        "Ace": 0
-      }
-      player.cards.forEach(card => {
-        valueCounts[card.value]++
-      })
-  
-      for (const [value, count] of Object.entries(valueCounts)) {
-        if (count === 4) player.dropSimilarCardsByValue(value);
-      }
-    }, 700)
+  updatePlayerNumbers() {
+    // renumber all players
+    let i = 0;
+    this.players.forEach(player => {
+      player.playerNumber = i + 1;
+      i++
+    })
+  }
+
+  destroyPlayer(sessionId: string) {
+    const player = this.players.get(sessionId);
+    if (player !== undefined) this.players.delete(sessionId);
+  }
+
+  createPlayer(sessionId: string, options: any, room: GameRoom) {
+    const player = new Player(sessionId, options, room);
+    this.players.set(sessionId, player);
+    
+    this.updatePlayerNumbers();
   }
 
   dealCardsToPlayer(cardsCount: number, sessionId: string) {
+    //console.log('Deal cards to', sessionId);
     const player = this.players.get(sessionId);
     let index = 0;
     let interval = CARD_MAX_INTERVAL;
@@ -80,10 +98,9 @@ export class GameRoomState extends Schema {
     const dealNextCard = () => {
       if ((index < cardsCount) && (this.deck.cards.length > 0) && player.cards.length < START_CARDS_COUNT) {
         const card = this.deck.getRandomCard();
-        player.cards.push(card);
+        player.addCard(card);
         index++;
 
-        if (index === cardsCount) this.checkPlayerCardsForStack(sessionId);
         interval *= CARD_SPEED_MULTIPLIER;
         if (interval < CARD_MIN_INTERVAL) interval = CARD_MIN_INTERVAL
         setTimeout(dealNextCard, interval);
@@ -100,10 +117,6 @@ export class GameRoomState extends Schema {
     this.table.lastTurnBy = sessionId;
   }
 
-  createPlayer(sessionId: string, options: any, room: GameRoom) {
-    const player = new Player(sessionId, options, room);
-    this.players.set(sessionId, player);
-  }
   checkCheckingTable(sessionId: string) {
     const cardsCount = this.checkingTable.cards.length;
     let index = 0;
@@ -145,7 +158,7 @@ export class GameRoomState extends Schema {
     }
 
     checkNextCard(); // Запускаем процесс добавления карт
-}
+  }
 
   transferAllTableCardsToPlayer(sessionId: string) {
 
@@ -157,11 +170,10 @@ export class GameRoomState extends Schema {
         if (index < cardsCount) {
             const player = this.players.get(sessionId);
             const card = this.table.cards[index];
-            player.cards.push(card);
+            player.addCard(card);
             index++;
 
             if (index === cardsCount) {
-              this.checkPlayerCardsForStack(sessionId);
               setTimeout(() => {
                 this.table.clear();
                 this.endRound();
@@ -183,8 +195,13 @@ export class GameRoomState extends Schema {
     this.previousTurnBy = this.currentTurnBy;
     this.currentTurnBy = "";
     this.turnNumber += 1;
+    const previousTurnPlayerNumber = this.players.get(this.previousTurnBy).playerNumber;
+
+    let nextTurnPlayerNumber = previousTurnPlayerNumber + 1
+    if (nextTurnPlayerNumber > 4) nextTurnPlayerNumber = 1 
+
     this.players.forEach(player => {
-      if (player.sessionId !== this.previousTurnBy) {
+      if (player.playerNumber === nextTurnPlayerNumber) {
         const nextTurnBy = player.sessionId;
         // Next turn will start after 500 ms.
         setTimeout(() => {
@@ -210,7 +227,7 @@ export class GameRoomState extends Schema {
 
   nextRound() {
 
-    this.room.broadcast("shuffleEnemyCards");
+    //this.room.broadcast("shuffleEnemyCards");
     this.room.broadcast("nextRound");
     this.checkingTable.clear();
     this.table.clear();
@@ -228,5 +245,7 @@ export class GameRoomState extends Schema {
       }, 500)
     }, 1500)
   }
+  
 
 }
+

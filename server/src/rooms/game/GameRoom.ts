@@ -2,10 +2,11 @@ import { Room, Client } from "@colyseus/core";
 import { GameRoomState } from "./schema/GameRoomState";
 
 export class GameRoom extends Room<GameRoomState> {
-
-  maxClients = 2;
+  playersToStart = 4;
+  maxClients = 4;
 
   onCreate (options: any) {
+    
     this.autoDispose = true;
     this.patchRate = 1;
     this.setState(new GameRoomState(this));
@@ -25,24 +26,27 @@ export class GameRoom extends Room<GameRoomState> {
       player.playSelectedCards(fakeName);
     });
 
+    this.onMessage("dropSelectedCards", (client, message) => {
+      const player = this.state.players.get(client.sessionId)
+      player.dropSelectedCards();
+    });
+
     this.onMessage("checkCheckingTable", (client, message) => {
       this.state.checkCheckingTable(client.sessionId);
     });
+
+    //this.setSimulationInterval((deltaTime) => this.update(), 16)
   }
 
-  getPlayer(sessionId: string) {
-    const player = this.state.players.get(sessionId);
-    if (player !== null) {
-      return player
-    } else {
-      return null}
+  update() {
+
   }
 
   onJoin (client: Client, options: any) {
     console.log(client.sessionId, "joined!");
     this.state.createPlayer(client.sessionId, options, this);
 
-    if (this.state.players.size === 2) {
+    if (this.state.players.size === this.playersToStart) {
       setTimeout(() => {
         this.state.startGame();
       }, 1000)
@@ -51,10 +55,13 @@ export class GameRoom extends Room<GameRoomState> {
 
   onLeave (client: Client, consented: boolean) {
     console.log(client.sessionId, "left!");
+    this.state.destroyPlayer(client.sessionId);
   }
 
   onDispose() {
-    console.log("room", this.roomId, "disposing...");
+    console.log("room", this.roomId, "disposing..");
   }
+
+  
 
 }
