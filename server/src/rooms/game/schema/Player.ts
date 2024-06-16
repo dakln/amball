@@ -1,7 +1,7 @@
 import { Schema, type, ArraySchema } from "@colyseus/schema";
 import { Card, CARD_MAX_INTERVAL, CARD_MIN_INTERVAL, CARD_SPEED_MULTIPLIER } from "./Card";
 import { GameRoom } from "../GameRoom";
-import { findCardByName, findCardByValue } from "./MiscFunctions";
+import { findCardByName, findCardByValue, increaseCardDelay } from "./MiscFunctions";
 
 export const START_CARDS_COUNT = 9;
 
@@ -12,11 +12,11 @@ export class Player extends Schema {
     @type("string") username: string;
     @type([ Card ]) cards = new ArraySchema<Card>();
     @type([ Card ]) selectedCards = new ArraySchema<Card>();
-
+    @type("boolean") isLeftFromTable: boolean = false;
     constructor(sessionId: string, options: any, room: GameRoom) {
         super();
         this.sessionId = sessionId;
-        this.username = options.username;
+        this.username = (options.username !== undefined) ? options.username : "User" + Math.round(Math.random() * 100);
         this.room = room;
         
     }
@@ -25,6 +25,10 @@ export class Player extends Schema {
         this.cards.splice(cardIndex, 1);
 
         this.room.broadcast('updatePlayerHand', this.sessionId);
+
+        if (this.cards.length === 0 && this.room.state.deck.cards.length === 0) {
+            this.isLeftFromTable = true;
+        } else this.isLeftFromTable = false;
     }
 
     addCard(card: Card) {
@@ -32,6 +36,8 @@ export class Player extends Schema {
         //console.log('Adding card to', this.sessionId);
         // send update my hand
         this.room.broadcast('addCardToPlayer', {sessionId: this.sessionId, cardName: card.name});
+
+        this.isLeftFromTable = false;
     } 
 
     selectCard(cardName: string) {
@@ -70,11 +76,8 @@ export class Player extends Schema {
                     this.room.state.nextTurn();
                 }
     
-                // Увеличиваем интервал с учетом количества карт
-                interval *= CARD_SPEED_MULTIPLIER;
-                if (interval < CARD_MIN_INTERVAL) interval = CARD_MIN_INTERVAL
-                //console.log(`Next card will be added in ${interval.toFixed(2)} ms`);
-                setTimeout(playNextCard, interval); // Планируем добавление следующей карты
+                interval = increaseCardDelay(interval);
+                setTimeout(playNextCard, interval);
             }
         }
     
@@ -103,15 +106,13 @@ export class Player extends Schema {
                 index++;
     
                 if (index === cardsCount) this.selectedCards.clear();
-                // Увеличиваем интервал с учетом количества карт
-                interval *= CARD_SPEED_MULTIPLIER;
-                if (interval < CARD_MIN_INTERVAL) interval = CARD_MIN_INTERVAL
-                //console.log(`Next card will be added in ${interval.toFixed(2)} ms`);
-                setTimeout(dropNextCard, interval); // Планируем добавление следующей карты
+
+                interval = interval = increaseCardDelay(interval);
+                setTimeout(dropNextCard, interval);
             }
         }
-    
-        dropNextCard(); // Запускаем процесс добавления карт
+
+        dropNextCard();
     }
 
     dropCard(card: Card) {
@@ -122,6 +123,7 @@ export class Player extends Schema {
         this.removeCard(cardIndex);
 
         this.room.state.droppedTable.addCard(card, this.sessionId);
+
     }
 
 }

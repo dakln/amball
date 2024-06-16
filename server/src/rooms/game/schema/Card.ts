@@ -12,4 +12,5 @@ export class Card extends Schema {
     constructor() {
         super();
     }
+
 }

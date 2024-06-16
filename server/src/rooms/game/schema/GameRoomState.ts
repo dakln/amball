@@ -1,9 +1,10 @@
 import { Schema, type, MapSchema, ArraySchema } from "@colyseus/schema";
 import { Player, START_CARDS_COUNT } from "./Player";
-import { Card, CARD_MAX_INTERVAL, CARD_MIN_INTERVAL, CARD_SPEED_MULTIPLIER } from "./Card";
+import { CARD_MAX_INTERVAL, CARD_MIN_INTERVAL, CARD_SPEED_MULTIPLIER } from "./Card";
 import { GameRoom } from "../GameRoom";
 import { Deck } from "./Deck";
 import { Table } from "./Table";
+import { increaseCardDelay } from "./MiscFunctions";
 
 
 export class GameRoomState extends Schema {
@@ -23,6 +24,7 @@ export class GameRoomState extends Schema {
   @type("number") round: number = 1;
   @type("number") turnNumber: number = 1;
   @type("string") roundWinner: string = "" // SessionId
+  @type("string") roundLoser: string = "" // SessionId
 
   @type("boolean") isResetingRound: boolean = false;
 
@@ -40,39 +42,48 @@ export class GameRoomState extends Schema {
       this.gameStarted = true;
       const availablePlayers: string[] = [];
 
-      this.players.forEach(player =>  {
+      this.players.forEach((player) => {
         availablePlayers.push(player.sessionId);
-        this.dealCardsToPlayer(START_CARDS_COUNT, player.sessionId);
-      });
-
-      // const interval = 1500;
-      // let index = 0
-      // const dealToNextPlayer = () => {
-      //   const playerSessionId = availablePlayers[index];
-      //   this.dealCardsToPlayer(START_CARDS_COUNT, playerSessionId);
-      //   index++
-
-      //   setTimeout(dealToNextPlayer, interval);
-      // }
-
-      // dealToNextPlayer();
-      
-      //this.currentTurnBy = availablePlayers[Math.floor(Math.random() * availablePlayers.length)];
-
-      // set turn to 1st player
-      this.players.forEach(player => {
-          if (player.playerNumber === 1) {
-            this.currentTurnBy = player.sessionId;
-          }
       })
+      //console.log(availablePlayers);
+      // Deal cards for each player with delay between them
+      let index = 0
+      const dealToNextPlayer = () => {
+        const playerSessionId = availablePlayers[index];
+        this.dealCardsToPlayer(playerSessionId, START_CARDS_COUNT);
+        index++
+
+        setTimeout(dealToNextPlayer, 1500);
+      }
+      dealToNextPlayer();
+      
+      this.setCurrentTurnBy(1);
     }
   }
 
+  setCurrentTurnBy(input: string, reset?: boolean): void
+  setCurrentTurnBy(input: number): void
+  setCurrentTurnBy(input: string | number, reset?: boolean) {
+    if (typeof input === 'string') {
+      this.previousTurnBy = this.currentTurnBy;
+      this.currentTurnBy = input;
+      if (reset) {
+        this.previousTurnBy = input
+        this.currentTurnBy = input
+      }
+    } else if (typeof input === 'number') {
+      this.previousTurnBy = this.currentTurnBy;
+      this.players.forEach((player) => {
+          if (player.playerNumber === input) this.currentTurnBy = player.sessionId;
+      })
+    }
+    this.room.broadcast('setNewTurnBy', this.currentTurnBy);
+  }
+
   updatePlayerNumbers() {
-    // renumber all players
-    let i = 0;
+    let i = 1;
     this.players.forEach(player => {
-      player.playerNumber = i + 1;
+      player.playerNumber = i;
       i++
     })
   }
@@ -89,8 +100,7 @@ export class GameRoomState extends Schema {
     this.updatePlayerNumbers();
   }
 
-  dealCardsToPlayer(cardsCount: number, sessionId: string) {
-    //console.log('Deal cards to', sessionId);
+  dealCardsToPlayer(sessionId: string, cardsCount: number) {
     const player = this.players.get(sessionId);
     let index = 0;
     let interval = CARD_MAX_INTERVAL;
@@ -101,23 +111,68 @@ export class GameRoomState extends Schema {
         player.addCard(card);
         index++;
 
-        interval *= CARD_SPEED_MULTIPLIER;
-        if (interval < CARD_MIN_INTERVAL) interval = CARD_MIN_INTERVAL
+        interval = increaseCardDelay(interval);
         setTimeout(dealNextCard, interval);
       }
 
     }
-
     dealNextCard();
   }
 
   playerTurn(sessionId: string, fakeCardName: string) {
     this.checkingTable.clear();
     this.currentFakeCardName = fakeCardName;
-    this.table.lastTurnBy = sessionId;
+  }
+
+  getNextPlayerNumber(currentPlayerNumber: number) {
+    const maxPlayers = this.players.size;
+
+    // Проходим по игрокам начиная с текущего игрока + 1 и до текущего игрока + 4
+    for (let i = 1; i <= maxPlayers; i++) {
+        // Вычисляем следующий номер игрока циклически
+        const nextPlayerNumber = (currentPlayerNumber + i > maxPlayers) ? 1 : currentPlayerNumber + i
+        let nextPlayerSessionId;
+        this.players.forEach(player => {
+          if (player.playerNumber === nextPlayerNumber) nextPlayerSessionId = player.sessionId;
+        })
+        const nextPlayer = this.players.get(nextPlayerSessionId);
+        if (nextPlayer && !nextPlayer.isLeftFromTable) {
+            return nextPlayer.playerNumber;
+        }
+    }
+
+    return -1; // Если нет доступных игроков
+  }
+
+  checkWinner(checkerPlayerSessionId: string, checkingPlayerSessionId: string, correctCards: number, cardsCount: number) {
+    let nextTurnByPlayerNumber: number;
+    if (correctCards === cardsCount) {
+      // All cards were correct
+      // Checker get all of table cards
+      this.transferAllTableCardsToPlayer(checkerPlayerSessionId);
+      this.roundWinner = checkingPlayerSessionId;
+      this.roundLoser = checkerPlayerSessionId;
+
+      const player = this.players.get(checkerPlayerSessionId)
+      nextTurnByPlayerNumber = this.getNextPlayerNumber(player.playerNumber);
+    } else {
+      // All or most of all cards were wrong
+      // The player that was checked will get all of table cards
+      this.transferAllTableCardsToPlayer(checkingPlayerSessionId);
+      this.roundWinner = checkerPlayerSessionId;
+      this.roundLoser = checkingPlayerSessionId;
+
+      const player = this.players.get(checkerPlayerSessionId)
+      nextTurnByPlayerNumber = player.playerNumber
+    }
+
+    setTimeout(() => {
+      this.setCurrentTurnBy(nextTurnByPlayerNumber);
+    }, 1000)
   }
 
   checkCheckingTable(sessionId: string) {
+    const checkingPlayerSessionId = this.checkingTable.lastTurnBy;
     const cardsCount = this.checkingTable.cards.length;
     let index = 0;
     let interval = CARD_MAX_INTERVAL;
@@ -135,33 +190,19 @@ export class GameRoomState extends Schema {
 
             if (index === cardsCount) {
               setTimeout(() => {
-                if (correctCards === cardsCount) {
-                  // All cards were correct
-                  // Checker get all of table cards
-                  this.transferAllTableCardsToPlayer(sessionId);
-                  this.roundWinner = this.checkingTable.lastTurnBy;
-                } else {
-                  // All or most of all cards were wrong
-                  // The player that was checked will get all of table cards
-                  this.transferAllTableCardsToPlayer(this.checkingTable.lastTurnBy);
-                  this.roundWinner = sessionId;
-                }
+                this.checkWinner(sessionId, checkingPlayerSessionId, correctCards, cardsCount);
               }, 2000)
             }
 
-            // Увеличиваем интервал с учетом количества карт
-            interval *= CARD_SPEED_MULTIPLIER;
-            if (interval < CARD_MIN_INTERVAL) interval = CARD_MIN_INTERVAL
-            //console.log(`Next card will be added in ${interval.toFixed(2)} ms`);
-            setTimeout(checkNextCard, interval); // Планируем добавление следующей карты
+            interval = increaseCardDelay(interval);
+            setTimeout(checkNextCard, interval);
         }
     }
 
-    checkNextCard(); // Запускаем процесс добавления карт
+    checkNextCard();
   }
 
   transferAllTableCardsToPlayer(sessionId: string) {
-
     const cardsCount = this.table.cards.length;
     let index = 0;
     let interval = CARD_MAX_INTERVAL;
@@ -174,55 +215,41 @@ export class GameRoomState extends Schema {
             index++;
 
             if (index === cardsCount) {
+              this.table.clear();
               setTimeout(() => {
-                this.table.clear();
                 this.endRound();
               }, 1000)
             }
 
-            // Увеличиваем интервал с учетом количества карт
-            interval *= CARD_SPEED_MULTIPLIER;
-            if (interval < CARD_MIN_INTERVAL) interval = CARD_MIN_INTERVAL
-            //console.log(`Next card will be added in ${interval.toFixed(2)} ms`);
-            setTimeout(transferNextCard, interval); // Планируем добавление следующей карты
+            interval = increaseCardDelay(interval);
+            setTimeout(transferNextCard, interval);
         }
     }
 
-    transferNextCard(); // Запускаем процесс добавления карт
+    transferNextCard();
   }
 
   nextTurn() {
-    this.previousTurnBy = this.currentTurnBy;
-    this.currentTurnBy = "";
+    this.setCurrentTurnBy("");
     this.turnNumber += 1;
-    const previousTurnPlayerNumber = this.players.get(this.previousTurnBy).playerNumber;
 
-    let nextTurnPlayerNumber = previousTurnPlayerNumber + 1
-    if (nextTurnPlayerNumber > 4) nextTurnPlayerNumber = 1 
+    const player = this.players.get(this.previousTurnBy);
+    const nextTurnPlayerNumber = this.getNextPlayerNumber(player.playerNumber);;
 
-    this.players.forEach(player => {
-      if (player.playerNumber === nextTurnPlayerNumber) {
-        const nextTurnBy = player.sessionId;
-        // Next turn will start after 500 ms.
-        setTimeout(() => {
-          this.currentTurnBy = nextTurnBy;
-        }, 500)
-      }
-    })
+    // Next turn will start after 500 ms.
+    setTimeout(() => {
+      this.setCurrentTurnBy(nextTurnPlayerNumber);
+    }, 500)
   }
 
   endRound() {
-    //console.log(`Round ${this.round} ended. Winner: ${this.roundWinner}`)
     this.isResetingRound = true;
-    this.currentTurnBy = "";
-    this.previousTurnBy = "";
     setTimeout(() => {
-      // Give cards from deck for each player
       this.players.forEach(player => {
-        this.dealCardsToPlayer(9, player.sessionId);
+          if (!player.isLeftFromTable) this.dealCardsToPlayer(player.sessionId, START_CARDS_COUNT);
       })
       this.nextRound();
-    }, 500)
+    }, 1000)
   }
 
   nextRound() {
@@ -235,15 +262,10 @@ export class GameRoomState extends Schema {
     this.turnNumber = 1;
     this.round += 1;
 
-    // Wait 1 s. then start new round
+    // Wait 1 s. then start next round
     setTimeout(() => {
-      
-      this.currentTurnBy = this.roundWinner;
-
-      setTimeout(() => {
-        this.isResetingRound = false;
-      }, 500)
-    }, 1500)
+      this.isResetingRound = false;
+    }, 1000)
   }
   
 

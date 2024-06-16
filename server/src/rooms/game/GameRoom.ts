@@ -35,6 +35,16 @@ export class GameRoom extends Room<GameRoomState> {
       this.state.checkCheckingTable(client.sessionId);
     });
 
+    // Test messages
+    this.onMessage("test_selectRandomCardsAndDrop", (client, message) => {
+      const player = this.state.players.get(client.sessionId);
+      if (player.cards.length > 0) {
+        for (let i = 0; i < 9; i++) {
+          player.selectCard(player.cards[i].name);
+        }
+      }
+      player.playSelectedCards('10');
+    });
     //this.setSimulationInterval((deltaTime) => this.update(), 16)
   }
 
