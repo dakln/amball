@@ -1,6 +1,5 @@
 import { Schema, type, ArraySchema } from "@colyseus/schema";
 import { Card } from "./Card";
-import { Cards } from "./Cards";
 
 export class Table extends Schema {
     @type("string") lastTurnBy: string = ""; // SessionId

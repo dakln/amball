@@ -48,10 +48,6 @@ export class GameRoom extends Room<GameRoomState> {
     //this.setSimulationInterval((deltaTime) => this.update(), 16)
   }
 
-  update() {
-
-  }
-
   onJoin (client: Client, options: any) {
     console.log(client.sessionId, "joined!");
     this.state.createPlayer(client.sessionId, options, this);

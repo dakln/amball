@@ -1,7 +1,8 @@
 import { Schema, type, ArraySchema } from "@colyseus/schema";
 import { Card, CARD_MAX_INTERVAL, CARD_MIN_INTERVAL, CARD_SPEED_MULTIPLIER } from "./Card";
 import { GameRoom } from "../GameRoom";
-import { findCardByName, findCardByValue, increaseCardDelay } from "./MiscFunctions";
+import { findCardByName, increaseCardDelay } from "./MiscFunctions";
+import { Joker } from "./Joker";
 
 export const START_CARDS_COUNT = 9;
 
@@ -11,6 +12,7 @@ export class Player extends Schema {
     @type("string") sessionId: string;
     @type("string") username: string;
     @type([ Card ]) cards = new ArraySchema<Card>();
+    @type([ Joker ]) jokers = new ArraySchema<Joker>();
     @type([ Card ]) selectedCards = new ArraySchema<Card>();
     @type("boolean") isLeftFromTable: boolean = false;
     constructor(sessionId: string, options: any, room: GameRoom) {
@@ -59,7 +61,7 @@ export class Player extends Schema {
     }
 
     playSelectedCards(fakeCardName: string) {
-        this.room.state.playerTurn(this.sessionId, fakeCardName);
+        this.room.state.newTurn(this.sessionId, fakeCardName);
 
         const cardsCount = this.selectedCards.length;
         let index = 0;

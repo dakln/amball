@@ -5,6 +5,7 @@ import { GameRoom } from "../GameRoom";
 import { Deck } from "./Deck";
 import { Table } from "./Table";
 import { increaseCardDelay } from "./MiscFunctions";
+import { CheckingTable } from "./CheckingTable";
 
 
 export class GameRoomState extends Schema {
@@ -13,7 +14,7 @@ export class GameRoomState extends Schema {
   @type("boolean") gameStarted: boolean = false;
   @type(Deck) deck = new Deck();
   @type (Table) table = new Table();
-  @type(Table) checkingTable = new Table();
+  @type(CheckingTable) checkingTable = new CheckingTable();
   @type(Table) droppedTable = new Table();
   @type(["string"]) droppedCardValues = new ArraySchema<string>();
   @type("string") currentFakeCardName: string = "";
@@ -39,18 +40,14 @@ export class GameRoomState extends Schema {
 
   startGame() {
     if (!this.gameStarted) {
-      this.gameStarted = true;
-      const availablePlayers: string[] = [];
-
+      const playersArray: Player[] = [];
       this.players.forEach((player) => {
-        availablePlayers.push(player.sessionId);
+        playersArray.push(player);
       })
-      //console.log(availablePlayers);
       // Deal cards for each player with delay between them
       let index = 0
       const dealToNextPlayer = () => {
-        const playerSessionId = availablePlayers[index];
-        this.dealCardsToPlayer(playerSessionId, START_CARDS_COUNT);
+        this.deck.dealCards(playersArray[index], START_CARDS_COUNT);
         index++
 
         setTimeout(dealToNextPlayer, 1500);
@@ -100,26 +97,7 @@ export class GameRoomState extends Schema {
     this.updatePlayerNumbers();
   }
 
-  dealCardsToPlayer(sessionId: string, cardsCount: number) {
-    const player = this.players.get(sessionId);
-    let index = 0;
-    let interval = CARD_MAX_INTERVAL;
-
-    const dealNextCard = () => {
-      if ((index < cardsCount) && (this.deck.cards.length > 0) && player.cards.length < START_CARDS_COUNT) {
-        const card = this.deck.getRandomCard();
-        player.addCard(card);
-        index++;
-
-        interval = increaseCardDelay(interval);
-        setTimeout(dealNextCard, interval);
-      }
-
-    }
-    dealNextCard();
-  }
-
-  playerTurn(sessionId: string, fakeCardName: string) {
+  newTurn(sessionId: string, fakeCardName: string) {
     this.checkingTable.clear();
     this.currentFakeCardName = fakeCardName;
   }
@@ -246,7 +224,7 @@ export class GameRoomState extends Schema {
     this.isResetingRound = true;
     setTimeout(() => {
       this.players.forEach(player => {
-          if (!player.isLeftFromTable) this.dealCardsToPlayer(player.sessionId, START_CARDS_COUNT);
+          if (!player.isLeftFromTable) this.deck.dealCards(player, START_CARDS_COUNT);
       })
       this.nextRound();
     }, 1000)
