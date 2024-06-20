@@ -1,62 +1,80 @@
 import { Room, Client } from "@colyseus/core";
 import { GameRoomState } from "./schema/GameRoomState";
+import { Card } from "./schema/Card";
 
 export class GameRoom extends Room<GameRoomState> {
-  playersToStart = 4;
+  GAME_SPEED = 1;
+  playersToStart = 2;
   maxClients = 4;
 
   onCreate (options: any) {
-    
     this.autoDispose = true;
-    this.patchRate = 1;
-    this.setState(new GameRoomState(this));
-    
-    this.onMessage("selectCard", (client, cardName) => {
+    //this.patchRate = 0.1;
+    this.setState(new GameRoomState(this, "36"));
+
+    this.onMessage("selectCard", (client, message) => {
       const player = this.state.players.get(client.sessionId)
-      player.selectCard(cardName);
+      const json = JSON.parse(message);
+      const card = new Card().assign({
+        id: json.id,
+        name: json.name,
+        value: json.value,
+        suit: json.suit,
+        type: json.type
+      })
+      player.selectCard(card);
     });
 
-    this.onMessage("deselectCard", (client, cardName) => {
+    this.onMessage("deselectCard", (client, message) => {
       const player = this.state.players.get(client.sessionId)
-      player.deselectCard(cardName);
+      const json = JSON.parse(message);
+      const card = new Card().assign({
+        id: json.id,
+        name: json.name,
+        value: json.value,
+        suit: json.suit,
+        type: json.type
+      })
+      player.deselectCard(card);
     });
 
-    this.onMessage("playSelectedCards", (client, fakeName) => {
+    this.onMessage("playSelectedCards", (client, fakeValue) => {
       const player = this.state.players.get(client.sessionId)
-      player.playSelectedCards(fakeName);
+      if (player) {
+        player.playCards(fakeValue, player.selectedCards);
+        player.selectedCards.clear();
+      } 
     });
 
     this.onMessage("dropSelectedCards", (client, message) => {
       const player = this.state.players.get(client.sessionId)
-      player.dropSelectedCards();
+      if (player) {
+        player.dropCards(player.selectedCards);
+      }
     });
 
     this.onMessage("checkCheckingTable", (client, message) => {
-      this.state.checkCheckingTable(client.sessionId);
+      const player = this.state.players.get(client.sessionId)
+      if (player) {
+        this.state.checkingTable.checkTable(client.sessionId);
+      }
     });
 
-    // Test messages
-    this.onMessage("test_selectRandomCardsAndDrop", (client, message) => {
+    // Test
+    this.onMessage("test_PlayRandomCards", (client, message) => {
       const player = this.state.players.get(client.sessionId);
       if (player.cards.length > 0) {
-        for (let i = 0; i < 9; i++) {
-          player.selectCard(player.cards[i].name);
-        }
+        player.cards.forEach(card => {
+          player.selectCard(card);
+        })
+        player.playCards('10', player.selectedCards);
       }
-      player.playSelectedCards('10');
     });
-    //this.setSimulationInterval((deltaTime) => this.update(), 16)
   }
 
   onJoin (client: Client, options: any) {
     console.log(client.sessionId, "joined!");
     this.state.createPlayer(client.sessionId, options, this);
-
-    if (this.state.players.size === this.playersToStart) {
-      setTimeout(() => {
-        this.state.startGame();
-      }, 1000)
-    }
   }
 
   onLeave (client: Client, consented: boolean) {

@@ -1,40 +1,43 @@
 import { Schema, type, MapSchema, ArraySchema } from "@colyseus/schema";
 import { Player, START_CARDS_COUNT } from "./Player";
-import { CARD_MAX_INTERVAL, CARD_MIN_INTERVAL, CARD_SPEED_MULTIPLIER } from "./Card";
+import { Card, CARD_MAX_INTERVAL, CARD_MIN_INTERVAL, CARD_SPEED_MULTIPLIER } from "./Card";
 import { GameRoom } from "../GameRoom";
 import { Deck } from "./Deck";
 import { Table } from "./Table";
-import { increaseCardDelay } from "./MiscFunctions";
+import { getNextPlayerNumber, increaseCardDelay } from "./MiscFunctions";
 import { CheckingTable } from "./CheckingTable";
+import { DELAY_BEFORE_GAME_START, DELAY_BEFORE_NEXT_TURN, DELAY_BEFORE_START_ROUND } from "./Delays";
+import { Turn } from "./Turn";
+import { DroppedTable } from "./DroppedTable";
 
+const delayBeforeNextRound: number = 1; 
 
 export class GameRoomState extends Schema {
-  private room: GameRoom;
+  public room: GameRoom;
 
   @type("boolean") gameStarted: boolean = false;
-  @type(Deck) deck = new Deck();
+  @type(Deck) deck: Deck;
   @type (Table) table = new Table();
   @type(CheckingTable) checkingTable = new CheckingTable();
-  @type(Table) droppedTable = new Table();
-  @type(["string"]) droppedCardValues = new ArraySchema<string>();
-  @type("string") currentFakeCardName: string = "";
+  @type(DroppedTable) droppedTable = new DroppedTable();
+  @type([ Turn ]) turns = new ArraySchema<Turn>();
 
   @type("string") previousTurnBy: string = ""; // SessionId of player
   @type("string") currentTurnBy: string = ""; // SessionId of player
 
   @type("number") round: number = 1;
-  @type("number") turnNumber: number = 1;
-  @type("string") roundWinner: string = "" // SessionId
-  @type("string") roundLoser: string = "" // SessionId
 
   @type("boolean") isResetingRound: boolean = false;
 
   @type({ map: Player }) players = new MapSchema<Player>();
 
   
-  constructor(room: GameRoom) {
+  constructor(room: GameRoom, deckType: string) {
       super();
+      this.deck = new Deck(deckType);
       this.room = room;
+      this.checkingTable.setup(this);
+      this.table.setup(this);
 
   }
 
@@ -45,16 +48,20 @@ export class GameRoomState extends Schema {
         playersArray.push(player);
       })
       // Deal cards for each player with delay between them
+      const interval = 0 / this.room.GAME_SPEED
       let index = 0
       const dealToNextPlayer = () => {
         this.deck.dealCards(playersArray[index], START_CARDS_COUNT);
         index++
 
-        setTimeout(dealToNextPlayer, 1500);
+        if (index === playersArray.length) setTimeout(() => {
+          this.gameStarted = true;
+          this.setCurrentTurnBy(1);
+        }, interval);
+        
+        setTimeout(dealToNextPlayer, interval);
       }
       dealToNextPlayer();
-      
-      this.setCurrentTurnBy(1);
     }
   }
 
@@ -70,11 +77,15 @@ export class GameRoomState extends Schema {
       }
     } else if (typeof input === 'number') {
       this.previousTurnBy = this.currentTurnBy;
-      this.players.forEach((player) => {
+      if (input !== -1) {
+        this.players.forEach((player) => {
           if (player.playerNumber === input) this.currentTurnBy = player.sessionId;
       })
+      } else {
+        console.log('Unavailable to set turn to player with playerNumber: -1');
+      }
     }
-    this.room.broadcast('setNewTurnBy', this.currentTurnBy);
+    this.room.broadcast('newTurnAvailable', this.currentTurnBy);
   }
 
   updatePlayerNumbers() {
@@ -87,7 +98,7 @@ export class GameRoomState extends Schema {
 
   destroyPlayer(sessionId: string) {
     const player = this.players.get(sessionId);
-    if (player !== undefined) this.players.delete(sessionId);
+    if (player) this.players.delete(sessionId);
   }
 
   createPlayer(sessionId: string, options: any, room: GameRoom) {
@@ -95,157 +106,85 @@ export class GameRoomState extends Schema {
     this.players.set(sessionId, player);
     
     this.updatePlayerNumbers();
+
+    if (this.players.size === this.room.playersToStart) {
+      setTimeout(() => {
+        this.startGame();
+      }, (DELAY_BEFORE_GAME_START * 1000) / this.room.GAME_SPEED);
+    }
   }
 
-  newTurn(sessionId: string, fakeCardName: string) {
+  playerTurn(sessionId: string, fakeCardValue: string, cards: ArraySchema<Card>) {
     this.checkingTable.clear();
-    this.currentFakeCardName = fakeCardName;
+    const turn = new Turn().assign({
+      sessionId: sessionId,
+      fakeCardValue: fakeCardValue,
+      cards: cards
+    })
+    if (this.table.fakeCardValue === "") this.table.setFakeCardValue(fakeCardValue);
+    this.turns.push(turn); // КАРТЫ НЕ РЕГАЮТСЯ
   }
 
-  getNextPlayerNumber(currentPlayerNumber: number) {
-    const maxPlayers = this.players.size;
-
-    // Проходим по игрокам начиная с текущего игрока + 1 и до текущего игрока + 4
-    for (let i = 1; i <= maxPlayers; i++) {
-        // Вычисляем следующий номер игрока циклически
-        const nextPlayerNumber = (currentPlayerNumber + i > maxPlayers) ? 1 : currentPlayerNumber + i
-        let nextPlayerSessionId;
-        this.players.forEach(player => {
-          if (player.playerNumber === nextPlayerNumber) nextPlayerSessionId = player.sessionId;
-        })
-        const nextPlayer = this.players.get(nextPlayerSessionId);
-        if (nextPlayer && !nextPlayer.isLeftFromTable) {
-            return nextPlayer.playerNumber;
-        }
+  endTurn(sessionId: string) {
+    let nextTurnPlayerNumber: number;
+    const player = this.players.get(sessionId);
+    if (player) {
+      nextTurnPlayerNumber = getNextPlayerNumber(this.players, player.playerNumber);
+      this.setCurrentTurnBy("");
+      setTimeout(() => {
+        this.setCurrentTurnBy(nextTurnPlayerNumber);
+      }, (DELAY_BEFORE_NEXT_TURN * 1000) / this.room.GAME_SPEED)
     }
-
-    return -1; // Если нет доступных игроков
-  }
-
-  checkWinner(checkerPlayerSessionId: string, checkingPlayerSessionId: string, correctCards: number, cardsCount: number) {
-    let nextTurnByPlayerNumber: number;
-    if (correctCards === cardsCount) {
-      // All cards were correct
-      // Checker get all of table cards
-      this.transferAllTableCardsToPlayer(checkerPlayerSessionId);
-      this.roundWinner = checkingPlayerSessionId;
-      this.roundLoser = checkerPlayerSessionId;
-
-      const player = this.players.get(checkerPlayerSessionId)
-      nextTurnByPlayerNumber = this.getNextPlayerNumber(player.playerNumber);
-    } else {
-      // All or most of all cards were wrong
-      // The player that was checked will get all of table cards
-      this.transferAllTableCardsToPlayer(checkingPlayerSessionId);
-      this.roundWinner = checkerPlayerSessionId;
-      this.roundLoser = checkingPlayerSessionId;
-
-      const player = this.players.get(checkerPlayerSessionId)
-      nextTurnByPlayerNumber = player.playerNumber
-    }
-
-    setTimeout(() => {
-      this.setCurrentTurnBy(nextTurnByPlayerNumber);
-    }, 1000)
-  }
-
-  checkCheckingTable(sessionId: string) {
-    const checkingPlayerSessionId = this.checkingTable.lastTurnBy;
-    const cardsCount = this.checkingTable.cards.length;
-    let index = 0;
-    let interval = CARD_MAX_INTERVAL;
-    let correctCards = 0;
-
-    const checkNextCard = () => {
-        if (index < cardsCount) {
-            const card = this.checkingTable.cards[index];
-
-            // Check card
-            this.room.broadcast("checkCard", card.name);
-            if (card.value === this.currentFakeCardName) correctCards++
-
-            index++;
-
-            if (index === cardsCount) {
-              setTimeout(() => {
-                this.checkWinner(sessionId, checkingPlayerSessionId, correctCards, cardsCount);
-              }, 2000)
-            }
-
-            interval = increaseCardDelay(interval);
-            setTimeout(checkNextCard, interval);
-        }
-    }
-
-    checkNextCard();
-  }
-
-  transferAllTableCardsToPlayer(sessionId: string) {
-    const cardsCount = this.table.cards.length;
-    let index = 0;
-    let interval = CARD_MAX_INTERVAL;
-
-    const transferNextCard = () => {
-        if (index < cardsCount) {
-            const player = this.players.get(sessionId);
-            const card = this.table.cards[index];
-            player.addCard(card);
-            index++;
-
-            if (index === cardsCount) {
-              this.table.clear();
-              setTimeout(() => {
-                this.endRound();
-              }, 1000)
-            }
-
-            interval = increaseCardDelay(interval);
-            setTimeout(transferNextCard, interval);
-        }
-    }
-
-    transferNextCard();
-  }
-
-  nextTurn() {
-    this.setCurrentTurnBy("");
-    this.turnNumber += 1;
-
-    const player = this.players.get(this.previousTurnBy);
-    const nextTurnPlayerNumber = this.getNextPlayerNumber(player.playerNumber);;
-
-    // Next turn will start after 500 ms.
-    setTimeout(() => {
-      this.setCurrentTurnBy(nextTurnPlayerNumber);
-    }, 500)
   }
 
   endRound() {
     this.isResetingRound = true;
-    setTimeout(() => {
-      this.players.forEach(player => {
-          if (!player.isLeftFromTable) this.deck.dealCards(player, START_CARDS_COUNT);
-      })
-      this.nextRound();
-    }, 1000)
+    const loser = this.players.get(this.checkingTable.loser)
+    this.table.transferAllCardsToPlayer(loser)
   }
 
-  nextRound() {
+  prepareNextRound() {
+    const loser = this.players.get(this.checkingTable.loser)
+    const winner = this.players.get(this.checkingTable.winner)
 
+    let nextTurnByPlayerNumber: number;
+    if (this.checkingTable.winner === this.checkingTable.lastTurnBy) {
+      nextTurnByPlayerNumber = getNextPlayerNumber(this.players, loser.playerNumber);
+    } else if (this.checkingTable.winner === this.checkingTable.checker) {
+      nextTurnByPlayerNumber = winner.playerNumber;
+    }
+    let playersWithCards: number = 0;
+    this.players.forEach(player => {
+      if (player.cards.length > 0) playersWithCards++
+    })
+    // Check to end game
+    setTimeout(() => {
+      if (playersWithCards > 1) {
+        this.nextRound(nextTurnByPlayerNumber);
+      } else if (playersWithCards <= 1) {
+        this.endGame();
+      }
+    }, (DELAY_BEFORE_START_ROUND * 1000) / this.room.GAME_SPEED)
+    this.checkingTable.reset();
+  }
+
+  nextRound(nextTurnByPlayerNumber: number) {
     //this.room.broadcast("shuffleEnemyCards");
+    this.players.forEach(player => {
+      if (!player.isLeftFromTable) this.deck.dealCards(player, START_CARDS_COUNT)
+    })
     this.room.broadcast("nextRound");
-    this.checkingTable.clear();
-    this.table.clear();
-    this.currentFakeCardName = ""
-    this.turnNumber = 1;
+    this.checkingTable.reset();
+    this.table.reset();
+    this.turns.clear();
     this.round += 1;
-
-    // Wait 1 s. then start next round
-    setTimeout(() => {
-      this.isResetingRound = false;
-    }, 1000)
+    this.setCurrentTurnBy(nextTurnByPlayerNumber);
+    this.isResetingRound = false;
   }
-  
+
+  endGame() {
+    console.log('Game has ended!');
+  }
 
 }
 
