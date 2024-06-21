@@ -1,9 +1,12 @@
+import { Schema, type } from "@colyseus/schema";
+import { Player } from "../Player";
+
 const enum JokerConditions {
     CardValueToPlayHasChosen, TableHasCards,
     PlayerHasCards, TableHasTurns, DeckHasCards
 }
-const enum JokerEvents {
-    LikeAnyCard, CopyCard, ChangeCardType,
+export const enum JokerEvents {
+    LikeAnyCard, DuplicateCard, ChangeCardType,
     ShowTableCards, ExchangeAllPlayers, DestroyRandomCardsFromHand,
     ShuffleTableCards, CheckPreviousPlayerCards, ChangeTableFakeCardName,
     AddCardsFromDeck, AddCardsFromTable, DestroySelectedCards
@@ -13,7 +16,7 @@ const enum Buffs {
     DisablePossibilityToCheck
 }
 
-interface Joker {
+interface JokerType {
     name: string;
     rarity: number;
     eventType: JokerEvents;
@@ -23,9 +26,9 @@ interface Joker {
     buffs: Buffs[];
 }
 
-export const Jokers: Joker[] = [
+export const Jokers: JokerType[] = [
     {name: "Joker", rarity: 1, eventType: JokerEvents.LikeAnyCard, config: {}, conditions: [JokerConditions.CardValueToPlayHasChosen], conditionsData: {}, buffs: []}, // Джокер
-    {name: "Textiler", rarity: 1, eventType: JokerEvents.CopyCard, config: {}, conditions: [], conditionsData: {}, buffs: []}, // Текстильщик
+    {name: "Textiler", rarity: 1, eventType: JokerEvents.DuplicateCard, config: {}, conditions: [], conditionsData: {}, buffs: []}, // Текстильщик
     {name: "Cheater", rarity: 1, eventType: JokerEvents.ChangeCardType, config: {newCardType: "glass"}, conditions: [], conditionsData: {}, buffs: []}, // Шуелёр
     {name: "Scout", rarity: 1, eventType: JokerEvents.ShowTableCards, config: {cardsCount: 1}, conditions: [JokerConditions.TableHasCards], conditionsData: {cardsCount: 1}, buffs: []}, // Разведчик
     {name: "Exchanger", rarity: 1, eventType: JokerEvents.ExchangeAllPlayers, config: {}, conditions: [], conditionsData: {}, buffs: []}, // Обменщик
@@ -38,3 +41,32 @@ export const Jokers: Joker[] = [
     {name: "Elector", rarity: 1, eventType: JokerEvents.DestroySelectedCards, config: {cardsCount: 3}, conditions: [JokerConditions.PlayerHasCards], conditionsData: {cardsCount: 3}, buffs: []}, // Избиратель
 ]
 
+function findJokerByName(name: string) {
+    return Jokers.find(joker => joker.name === name);
+}
+
+export class Joker extends Schema {
+    player: Player;
+    @type("string") name: string;
+    @type("number") rarity: number;
+    eventType: JokerEvents;
+    
+    constructor(name: string, player: Player) {
+        super();
+        this.name = name;
+        this.player = player
+        this.init();
+    }
+    init() {
+        const joker = findJokerByName(this.name);
+        this.eventType = joker.eventType;
+    }
+
+    use(data: any) {
+        switch (this.eventType) {
+            case JokerEvents.DuplicateCard:
+                this.player.room.state.createNewCard(data.card, this.player.sessionId);
+                break;
+        }
+    }
+}

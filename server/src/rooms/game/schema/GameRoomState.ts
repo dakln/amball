@@ -1,16 +1,15 @@
 import { Schema, type, MapSchema, ArraySchema } from "@colyseus/schema";
 import { Player, START_CARDS_COUNT } from "./Player";
-import { Card, CARD_MAX_INTERVAL, CARD_MIN_INTERVAL, CARD_SPEED_MULTIPLIER } from "./Card";
 import { GameRoom } from "../GameRoom";
 import { Deck } from "./Deck";
-import { Table } from "./Table";
-import { getNextPlayerNumber, increaseCardDelay } from "./MiscFunctions";
-import { CheckingTable } from "./CheckingTable";
+import { Table } from "./Tables/Table";
+import { getNextPlayerNumber } from "./MiscFunctions";
+import { CheckingTable } from "./Tables/CheckingTable";
 import { DELAY_BEFORE_GAME_START, DELAY_BEFORE_NEXT_TURN, DELAY_BEFORE_START_ROUND } from "./Delays";
 import { Turn } from "./Turn";
-import { DroppedTable } from "./DroppedTable";
+import { DroppedTable } from "./Tables/DroppedTable";
+import { Card } from "./Card";
 
-const delayBeforeNextRound: number = 1; 
 
 export class GameRoomState extends Schema {
   public room: GameRoom;
@@ -34,8 +33,8 @@ export class GameRoomState extends Schema {
   
   constructor(room: GameRoom, deckType: string) {
       super();
-      this.deck = new Deck(deckType);
       this.room = room;
+      this.deck = new Deck(deckType, this);
       this.checkingTable.setup(this);
       this.table.setup(this);
 
@@ -48,7 +47,7 @@ export class GameRoomState extends Schema {
         playersArray.push(player);
       })
       // Deal cards for each player with delay between them
-      const interval = 0 / this.room.GAME_SPEED
+      const interval = 1800 / this.room.GAME_SPEED
       let index = 0
       const dealToNextPlayer = () => {
         this.deck.dealCards(playersArray[index], START_CARDS_COUNT);
@@ -114,7 +113,7 @@ export class GameRoomState extends Schema {
     }
   }
 
-  playerTurn(sessionId: string, fakeCardValue: string, cards: ArraySchema<Card>) {
+  playerTurn(sessionId: string, fakeCardValue: string, cards: ArraySchema) {
     this.checkingTable.clear();
     const turn = new Turn().assign({
       sessionId: sessionId,
@@ -122,7 +121,7 @@ export class GameRoomState extends Schema {
       cards: cards
     })
     if (this.table.fakeCardValue === "") this.table.setFakeCardValue(fakeCardValue);
-    this.turns.push(turn); // КАРТЫ НЕ РЕГАЮТСЯ
+    this.turns.push(turn);
   }
 
   endTurn(sessionId: string) {
@@ -176,7 +175,7 @@ export class GameRoomState extends Schema {
     this.room.broadcast("nextRound");
     this.checkingTable.reset();
     this.table.reset();
-    this.turns.clear();
+    this.turns = new ArraySchema();
     this.round += 1;
     this.setCurrentTurnBy(nextTurnByPlayerNumber);
     this.isResetingRound = false;
@@ -184,6 +183,15 @@ export class GameRoomState extends Schema {
 
   endGame() {
     console.log('Game has ended!');
+  }
+
+  createNewCard(card: Card, sessionId: string) {
+    this.deck.addCard(card.suit, card.value, card.type)
+    setTimeout(() => {
+      const player = this.players.get(sessionId)
+      const n_card = this.deck.getCard(true);
+      if (player) player.addCard(n_card);
+    }, 100)
   }
 
 }

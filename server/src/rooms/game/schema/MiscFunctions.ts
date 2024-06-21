@@ -2,14 +2,6 @@ import { MapSchema, ArraySchema } from "@colyseus/schema";
 import { Card, CARD_MIN_INTERVAL, CARD_SPEED_MULTIPLIER } from "./Card";
 import { Player } from "./Player";
 
-export function findCardByName(array: ArraySchema<Card>, name: string) {
-    for (var i = 0; i < array.length; i++) {
-        if (array[i]["name"] === name) {
-            return array[i];
-        }
-    }
-    return null;
-}
 export function findCardsByNameAndId(array: ArraySchema<Card>, name: string, id: number) {
     for (var i = 0; i < array.length; i++) {
         if (array[i]["name"] === name && array[i]["id"] === Number(id) ) {
@@ -18,16 +10,8 @@ export function findCardsByNameAndId(array: ArraySchema<Card>, name: string, id:
     }
     return null;
 }
-export function findCardByValue(array: ArraySchema<Card>, value: string) {
-    for (var i = 0; i < array.length; i++) {
-        if (array[i]["value"] === value) {
-            return array[i];
-        }
-    }
-    return null;
-}
+
 export function increaseCardDelay(currentInterval: number) {
-    // Увеличиваем интервал
     let interval = currentInterval * CARD_SPEED_MULTIPLIER
     if (interval < CARD_MIN_INTERVAL) interval = CARD_MIN_INTERVAL
     //console.log(`Next card will be added in ${interval.toFixed(2)} ms`);
@@ -53,15 +37,4 @@ export function getNextPlayerNumber(players: MapSchema<Player>, currentPlayerNum
 
     return -1;
   }
-
-export function getCardIndexInArray(cards: ArraySchema<Card>, card: Card) {
-    const cardIndex = cards.findIndex(
-        c => c.id === card.id && 
-        c.name === card.name &&
-        c.value === card.value &&
-        c.suit === card.suit &&
-        c.type === card.type
-    )
-    return cardIndex;
-}
 

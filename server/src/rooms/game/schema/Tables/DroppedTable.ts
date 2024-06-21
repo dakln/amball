@@ -1,5 +1,5 @@
 import { Schema, type, ArraySchema } from "@colyseus/schema";
-import { Card } from "./Card";
+import { Card } from "../Card";
 
 export class Drop extends Schema {
     @type("string") sessionId: string;
@@ -14,7 +14,7 @@ export class DroppedTable extends Schema {
         this.drops.clear();
     }
 
-    addDrop(sessionId: string, cards: ArraySchema<Card>) {
+    addDrop(sessionId: string, cards: ArraySchema) {
         const drop = new Drop().assign({
             sessionId: sessionId,
             cards: cards

@@ -1,7 +1,8 @@
 import { Schema, type, ArraySchema } from "@colyseus/schema";
 import { Card, CARD_MAX_INTERVAL } from "./Card";
 import { Player, START_CARDS_COUNT } from "./Player";
-import { findCardByName, findCardsByNameAndId, increaseCardDelay } from "./MiscFunctions";
+import { findCardsByNameAndId, increaseCardDelay } from "./MiscFunctions";
+import { GameRoomState } from "./GameRoomState";
 
 const DECK_TYPES: string[] = ["36","52"];
 const SUITS: string[] = ["Hearts", "Clubs", "Diamonds", "Spades"];
@@ -9,11 +10,14 @@ const VALUES: string[] = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", 
 const CARD_TYPES: string[] = ["Default", "Glass"];
 
 export class Deck extends Schema {
+    private state: GameRoomState;
+    private lastCreatedCard: Card;
     @type("string") type: string;
     @type([ Card ]) cards = new ArraySchema<Card>();
 
-    constructor(type: string) {
+    constructor(type: string, state: GameRoomState) {
         super();
+        this.state = state;
         this.type = type;
         this.init();
     }
@@ -41,32 +45,43 @@ export class Deck extends Schema {
 
     getCardsCountByName(name: string) {
         let cardsCount: number = 0;
-        this.cards.forEach(card => {
+        const allCards: Card[] = [];
+        this.state.players.forEach(player => {
+            player.cards.forEach(card => {
+                allCards.push(card);
+            })
+        })
+        
+        allCards.forEach(card => {
             if (card.name === name) cardsCount++;
         })
         return cardsCount;
     }
 
-    addCard(suit: string, value: string, type: string) {
+    addCard(suit: string, value: string, type: string, customId?: number) {
         let name: string = `${value} of ${suit}`
         let id: number = this.getCardsCountByName(name);
         let card = new Card().assign({
-            id: id,
+            id: (customId) ? customId : id,
             name: name,
             suit: suit,
             value: value,
             type: type
         })
-        this.cards.push(card);        
+        this.cards.push(card);
+        this.lastCreatedCard = card;       
     }
 
-    getCard(name?: string, id?: number) {
+    getCard(lastCreated?: boolean) {
         if (this.cards.length > 0) {
             let card: Card;
             let index: number;
-            if (name) {
-                card = findCardsByNameAndId(this.cards, name, id)
-                if (card) return card
+            if (lastCreated) {
+                const lc_card = this.lastCreatedCard;
+                index = this.cards.findIndex(c => c.id === lc_card.id && c.name === lc_card.name);
+                card = this.cards[index];
+                this.cards.splice(index, 1);
+                return card;
             } else {
                 index = Math.floor(Math.random() * this.cards.length);
                 card = this.cards[index];

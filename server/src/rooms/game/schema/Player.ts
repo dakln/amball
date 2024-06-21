@@ -1,19 +1,21 @@
 import { Schema, type, ArraySchema } from "@colyseus/schema";
-import { Card, CARD_MAX_INTERVAL, CARD_MIN_INTERVAL, CARD_SPEED_MULTIPLIER } from "./Card";
+import { Card, CARD_MAX_INTERVAL} from "./Card";
 import { GameRoom } from "../GameRoom";
-import { findCardByName, findCardsByNameAndId, getCardIndexInArray, increaseCardDelay } from "./MiscFunctions";
-import { Joker } from "./Joker";
+import { increaseCardDelay } from "./MiscFunctions";
+import { Joker } from "./Jokers/Joker";
+//import { Joker } from "./Joker";
 
 export const START_CARDS_COUNT = 9;
 const MAX_SELECTED_CARDS = 4;
+
 export class Player extends Schema {
-    private room: GameRoom;
+    room: GameRoom;
     @type("number") playerNumber: number;
     @type("string") sessionId: string;
     @type("string") username: string;
-    @type([ Card ]) cards: ArraySchema<Card> = new ArraySchema<Card>();
     //@type([ Joker ]) jokers = new ArraySchema<Joker>();
-    @type([ Card ]) selectedCards: ArraySchema<Card> = new ArraySchema<Card>();
+    @type([ Card ]) cards  = new ArraySchema<Card>();
+    @type([ Card ]) selectedCards = new ArraySchema<Card>();
     @type("boolean") isLeftFromTable: boolean = false;
 
     constructor(sessionId: string, options: any, room: GameRoom) {
@@ -24,14 +26,12 @@ export class Player extends Schema {
         
     }
 
-    removeCard(card: Card, cards: ArraySchema<Card>) {
-        const cardIndex = getCardIndexInArray(cards, card);
-        if (cardIndex !== -1) {
-            cards.splice(cardIndex, 1);
-            if (this.cards.length === 0 && this.room.state.deck.cards.length === 0) {
-                this.isLeftFromTable = true;
-            } else this.isLeftFromTable = false;
-        }
+    removeCard(card: Card) {
+        const cardIndex = this.cards.findIndex(c => c.id === card.id && c.name === card.name)
+        this.cards.splice(cardIndex, 1);
+        if (this.cards.length === 0 && this.room.state.deck.cards.length === 0) {
+            this.isLeftFromTable = true;
+        } else this.isLeftFromTable = false;
     }
 
     addCard(card: Card) {
@@ -46,25 +46,24 @@ export class Player extends Schema {
     }
 
     deselectCard(card: Card) {
-        const cardIndex = getCardIndexInArray(this.selectedCards, card);
-        if (cardIndex !== -1) {
-            this.selectedCards.splice(cardIndex, 1);
-        }
+        const cardIndex = this.selectedCards.findIndex(c => c.id === card.id && c.name === card.name)
+        this.selectedCards.splice(cardIndex, 1);
     }
 
-    playCards(fakeCardValue: string, cards: ArraySchema<Card>) {
-        this.room.state.playerTurn(this.sessionId, fakeCardValue, cards);
-        const cardsCount = cards.length;
+    playSelectedCards(fakeCardValue: string) {
+        this.room.state.playerTurn(this.sessionId, fakeCardValue, this.selectedCards);
+        const cardsCount = this.selectedCards.length;
         let index = 0;
         let interval = CARD_MAX_INTERVAL;
     
         const playNextCard = () => {
             if (index < cardsCount) {
-                const card = cards[index];
+                const card = this.selectedCards[index];
                 this.playCard(card);
                 index++;
                 // When all cards were played
                 if (index === cardsCount) {
+                    this.selectedCards = new ArraySchema();
                     this.room.state.endTurn(this.sessionId);
                 }
     
@@ -77,26 +76,26 @@ export class Player extends Schema {
     }
 
     playCard(card: Card) {
-        this.removeCard(card, this.cards);
-        //this.removeCard(card, this.selectedCards);
+        this.removeCard(card);
 
         this.room.state.table.addCard(card, this.sessionId);
         this.room.state.checkingTable.addCard(card, this.sessionId);
     }
 
-    dropCards(cards: ArraySchema<Card>) {
-        const cardsCount = cards.length;
+    dropSelectedCards() {
+        this.room.state.droppedTable.addDrop(this.sessionId, this.selectedCards);
+        const cardsCount = this.selectedCards.length;
         let index = 0;
         let interval = CARD_MAX_INTERVAL;
     
         const dropNextCard = () => {
             if (index < cardsCount) {
-                const card = cards[index];
+                const card = this.selectedCards[index];
                 this.dropCard(card);
                 index++;
     
                 if (index === cardsCount) {
-                    cards.clear();
+                    this.selectedCards = new ArraySchema();
                 }
 
                 interval = interval = increaseCardDelay(interval);
@@ -105,12 +104,16 @@ export class Player extends Schema {
         }
 
         dropNextCard();
-
-        this.room.state.droppedTable.addDrop(this.sessionId, this.selectedCards);
     }
 
     dropCard(card: Card) {
-        this.room.broadcast("dropCard", card.name);
+        this.removeCard(card);
+        this.room.broadcast("dropCard", card);
+    }
+
+    useJoker(name: string, data: any) {
+        const joker = new Joker(name, this)
+        joker.use(data);
     }
 
 }

@@ -4,13 +4,13 @@ import { Card } from "./schema/Card";
 
 export class GameRoom extends Room<GameRoomState> {
   GAME_SPEED = 1;
-  playersToStart = 2;
+  playersToStart = 4;
   maxClients = 4;
 
   onCreate (options: any) {
     this.autoDispose = true;
     //this.patchRate = 0.1;
-    this.setState(new GameRoomState(this, "36"));
+    this.setState(new GameRoomState(this, "52"));
 
     this.onMessage("selectCard", (client, message) => {
       const player = this.state.players.get(client.sessionId)
@@ -41,15 +41,14 @@ export class GameRoom extends Room<GameRoomState> {
     this.onMessage("playSelectedCards", (client, fakeValue) => {
       const player = this.state.players.get(client.sessionId)
       if (player) {
-        player.playCards(fakeValue, player.selectedCards);
-        player.selectedCards.clear();
+        player.playSelectedCards(fakeValue);
       } 
     });
 
     this.onMessage("dropSelectedCards", (client, message) => {
       const player = this.state.players.get(client.sessionId)
       if (player) {
-        player.dropCards(player.selectedCards);
+        player.dropSelectedCards();
       }
     });
 
@@ -67,10 +66,21 @@ export class GameRoom extends Room<GameRoomState> {
         player.cards.forEach(card => {
           player.selectCard(card);
         })
-        player.playCards('10', player.selectedCards);
+        player.playSelectedCards('10');
+      }
+    });
+
+    this.onMessage("useJoker", (client, message) => {
+      const player = this.state.players.get(client.sessionId)
+      const data = {
+        card: player.selectedCards[0]
+      }
+      if (data.card) {
+        player.useJoker("Textiler", data)
       }
     });
   }
+
 
   onJoin (client: Client, options: any) {
     console.log(client.sessionId, "joined!");

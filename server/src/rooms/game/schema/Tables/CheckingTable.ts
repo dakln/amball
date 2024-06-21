@@ -1,8 +1,8 @@
 import { Schema, type, ArraySchema } from "@colyseus/schema";
-import { Card, CARD_MAX_INTERVAL } from "./Card";
-import { increaseCardDelay } from "./MiscFunctions";
-import { GameRoomState } from "./GameRoomState";
-import { DELAY_BEFORE_END_ROUND } from "./Delays";
+import { Card, CARD_MAX_INTERVAL } from "../Card";
+import { increaseCardDelay } from "../MiscFunctions";
+import { GameRoomState } from "../GameRoomState";
+import { DELAY_BEFORE_END_ROUND } from "../Delays";
 
 export class CheckingTable extends Schema {
     private state: GameRoomState;
@@ -55,7 +55,7 @@ export class CheckingTable extends Schema {
                 const card = this.cards[index];
     
                 // Check card
-                this.state.room.broadcast("checkCard", card.name);
+                this.state.room.broadcast("checkCard", card);
                 if (card.value === this.fakeCardValue) correctCards++
     
                 index++;

@@ -1,8 +1,8 @@
 import { Schema, type, ArraySchema } from "@colyseus/schema";
-import { Card, CARD_MAX_INTERVAL } from "./Card";
-import { Player } from "./Player";
-import { increaseCardDelay } from "./MiscFunctions";
-import { GameRoomState } from "./GameRoomState";
+import { Card, CARD_MAX_INTERVAL } from "../Card";
+import { Player } from "../Player";
+import { increaseCardDelay } from "../MiscFunctions";
+import { GameRoomState } from "../GameRoomState";
 
 export class Table extends Schema {
     private state: GameRoomState;
