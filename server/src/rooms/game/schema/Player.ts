@@ -1,57 +1,64 @@
 import { Schema, type, ArraySchema } from "@colyseus/schema";
 import { Card, CARD_MAX_INTERVAL} from "./Card";
 import { GameRoom } from "../GameRoom";
-import { increaseCardDelay } from "./MiscFunctions";
+import { CardCollection } from "./CardCollection";
+import { GameRoomState } from "./GameRoomState";
 import { Joker } from "./Jokers/Joker";
-//import { Joker } from "./Joker";
+import { createJoker } from "./Jokers/Jokers";
+import { increaseCardDelay } from "./MiscFunctions";
 
-export const START_CARDS_COUNT = 9;
-const MAX_SELECTED_CARDS = 4;
+export type CreatePlayerOptions = {
+    sessionId: string;
+    username: string;
+
+    room: GameRoom;
+    state: GameRoomState;
+}
+
 
 export class Player extends Schema {
+    static readonly MAX_SELECTION_SIZE = 4; // Max selected cards
+    static readonly DEFAULT_HAND_SIZE = 9; // Max selected cards
     room: GameRoom;
+    roomState: GameRoomState;
+
     @type("number") playerNumber: number;
     @type("string") sessionId: string;
     @type("string") username: string;
-    //@type([ Joker ]) jokers = new ArraySchema<Joker>();
-    @type([ Card ]) cards  = new ArraySchema<Card>();
-    @type([ Card ]) selectedCards = new ArraySchema<Card>();
+
+    @type(CardCollection) hand = new CardCollection();
+    @type ([ Card ]) selectedCards = new ArraySchema<Card>();
+
+    @type([ Joker ]) jokers = new ArraySchema<Joker>();
+
     @type("boolean") isLeftFromTable: boolean = false;
 
-    constructor(sessionId: string, options: any, room: GameRoom) {
+    constructor(options: CreatePlayerOptions) {
         super();
-        this.sessionId = sessionId;
-        this.username = (options.username !== undefined) ? options.username : "User" + Math.round(Math.random() * 100);
-        this.room = room;
-        
+        this.sessionId = options.sessionId;
+        this.username = options.username;
+        this.room = options.room;
+        this.roomState = options.state;
+
+        this.addJoker(createJoker('Textiler', 0, this));
+        this.addJoker(createJoker('Textiler', 1, this));
+        this.addJoker(createJoker('Textiler', 2, this));
+    }
+    // Player hand
+    addCardToHand(card: Card) {
+        this.hand.addCard(card);
     }
 
-    removeCard(card: Card) {
-        const cardIndex = this.cards.findIndex(c => c.id === card.id && c.name === card.name)
-        this.cards.splice(cardIndex, 1);
-        if (this.cards.length === 0 && this.room.state.deck.cards.length === 0) {
+    removeCardFromHand(card: Card) {
+        this.hand.removeCard(card);
+
+        if (this.hand.cards.length === 0 && this.roomState.deck.cards.length === 0) {
             this.isLeftFromTable = true;
         } else this.isLeftFromTable = false;
     }
-
-    addCard(card: Card) {
-        this.cards.push(card);
-        this.isLeftFromTable = false;
-    } 
-
-    selectCard(card: Card) {
-        if (this.selectedCards.length < MAX_SELECTED_CARDS) {
-            this.selectedCards.push(card);
-        }
-    }
-
-    deselectCard(card: Card) {
-        const cardIndex = this.selectedCards.findIndex(c => c.id === card.id && c.name === card.name)
-        this.selectedCards.splice(cardIndex, 1);
-    }
-
+    
     playSelectedCards(fakeCardValue: string) {
-        this.room.state.playerTurn(this.sessionId, fakeCardValue, this.selectedCards);
+        this.roomState.playerTurn(this.sessionId, fakeCardValue, this.selectedCards);
         const cardsCount = this.selectedCards.length;
         let index = 0;
         let interval = CARD_MAX_INTERVAL;
@@ -59,12 +66,12 @@ export class Player extends Schema {
         const playNextCard = () => {
             if (index < cardsCount) {
                 const card = this.selectedCards[index];
-                this.playCard(card);
+                this.dropCardToTable(card);
                 index++;
                 // When all cards were played
                 if (index === cardsCount) {
                     this.selectedCards = new ArraySchema();
-                    this.room.state.endTurn(this.sessionId);
+                    this.roomState.endTurn(this.sessionId);
                 }
     
                 interval = increaseCardDelay(interval);
@@ -75,15 +82,16 @@ export class Player extends Schema {
         playNextCard();
     }
 
-    playCard(card: Card) {
-        this.removeCard(card);
-
-        this.room.state.table.addCard(card, this.sessionId);
-        this.room.state.checkingTable.addCard(card, this.sessionId);
+    dropCardToTable(card: Card) {
+        this.hand.removeCard(card);
+        this.roomState.table.addCard(card);
+        
+        this.roomState.table.addCard(card);
+        this.roomState.checkingTable.addCard(card);
     }
 
     dropSelectedCards() {
-        this.room.state.droppedTable.addDrop(this.sessionId, this.selectedCards);
+        this.roomState.dropsCollection.addDrop(this.sessionId, this.selectedCards);
         const cardsCount = this.selectedCards.length;
         let index = 0;
         let interval = CARD_MAX_INTERVAL;
@@ -107,13 +115,66 @@ export class Player extends Schema {
     }
 
     dropCard(card: Card) {
-        this.removeCard(card);
+        this.removeCardFromHand(card);
         this.room.broadcast("dropCard", card);
     }
 
-    useJoker(name: string, data: any) {
-        const joker = new Joker(name, this)
-        joker.use(data);
+    // Player jokers
+    createJoker(name: string): Joker {
+        const jokerId = 0;
+        return createJoker(name, jokerId, this)
     }
 
+    addJoker(joker: Joker) {
+        this.jokers.push(joker);
+    }
+
+    removeJoker(joker: Joker) {
+        const index = this.jokers.findIndex(j => j.id === joker.id && joker.name === joker.name)
+        if (index > -1) {
+            this.jokers.splice(index, 1);
+        }
+    }
+
+    useJoker(id: number, name: string, data?: any) {
+        const joker = this.jokers.find(j => j.id === id && j.name === name)
+        if (joker) {
+            if (data !== undefined) {
+                joker.use(data);
+            }
+            else {
+                joker.use()
+            }
+            this.removeJoker(joker);
+        } 
+        else {
+            console.log(`Player have no Joker {id: ${id}, name: ${name}}`);
+        }
+    }
+
+    buyJoker(joker: Joker) {
+
+    }
+
+    sellJoker(joker: Joker) {
+
+    }
+
+    // Card selection
+    selectCard(card: Card) {
+        if (this.selectedCards.length < Player.MAX_SELECTION_SIZE) {
+            this.selectedCards.push(card);
+        }
+    }
+
+    deselectCard(card: Card) {
+        const index = this.selectedCards.findIndex(c => c.id === card.id && c.name === card.name)
+        if (index > -1) {
+            this.selectedCards.splice(index, 1);
+        }
+    }
+
+    clearSelectedCards() {
+        this.selectedCards = new ArraySchema<Card>();
+    }
 }

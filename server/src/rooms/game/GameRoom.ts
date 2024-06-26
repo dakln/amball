@@ -1,6 +1,12 @@
 import { Room, Client } from "@colyseus/core";
 import { GameRoomState } from "./schema/GameRoomState";
 import { Card } from "./schema/Card";
+import { DELAY_BEFORE_GAME_START } from "./schema/Delays";
+
+export type CreateRoomOptions = {
+  room: GameRoom;
+  deckType: string;
+}
 
 export class GameRoom extends Room<GameRoomState> {
   GAME_SPEED = 1;
@@ -10,30 +16,32 @@ export class GameRoom extends Room<GameRoomState> {
   onCreate (options: any) {
     this.autoDispose = true;
     //this.patchRate = 0.1;
-    this.setState(new GameRoomState(this, "52"));
+    const CreateRoomOptions: CreateRoomOptions = {
+      room: this,
+      deckType: (options.deckType !== undefined) ? options.deckType : "36" //"36"
+    }
+    this.setState(new GameRoomState(CreateRoomOptions));
 
     this.onMessage("selectCard", (client, message) => {
       const player = this.state.players.get(client.sessionId)
-      const json = JSON.parse(message);
       const card = new Card().assign({
-        id: json.id,
-        name: json.name,
-        value: json.value,
-        suit: json.suit,
-        type: json.type
+        id: message.id,
+        name: message.name,
+        value: message.value,
+        suit: message.suit,
+        type: message.type
       })
       player.selectCard(card);
     });
 
     this.onMessage("deselectCard", (client, message) => {
       const player = this.state.players.get(client.sessionId)
-      const json = JSON.parse(message);
       const card = new Card().assign({
-        id: json.id,
-        name: json.name,
-        value: json.value,
-        suit: json.suit,
-        type: json.type
+        id: message.id,
+        name: message.name,
+        value: message.value,
+        suit: message.suit,
+        type: message.type
       })
       player.deselectCard(card);
     });
@@ -62,8 +70,8 @@ export class GameRoom extends Room<GameRoomState> {
     // Test
     this.onMessage("test_PlayRandomCards", (client, message) => {
       const player = this.state.players.get(client.sessionId);
-      if (player.cards.length > 0) {
-        player.cards.forEach(card => {
+      if (player.hand.cards.length > 0) {
+        player.hand.cards.forEach(card => {
           player.selectCard(card);
         })
         player.playSelectedCards('10');
@@ -72,24 +80,27 @@ export class GameRoom extends Room<GameRoomState> {
 
     this.onMessage("useJoker", (client, message) => {
       const player = this.state.players.get(client.sessionId)
-      const data = {
-        card: player.selectedCards[0]
-      }
-      if (data.card) {
-        player.useJoker("Textiler", data)
-      }
+      player.useJoker(message.id, message.name)
     });
-  }
 
+  }
 
   onJoin (client: Client, options: any) {
     console.log(client.sessionId, "joined!");
-    this.state.createPlayer(client.sessionId, options, this);
+    this.state.addPlayer(client.sessionId, options, this);
+
+    // Start game conditions
+    if (this.state.players.size === this.playersToStart) {
+      setTimeout(() => {
+        this.lock();
+        this.state.startGame();
+      }, (DELAY_BEFORE_GAME_START * 1000) / this.GAME_SPEED);
+    }
   }
 
   onLeave (client: Client, consented: boolean) {
     console.log(client.sessionId, "left!");
-    this.state.destroyPlayer(client.sessionId);
+    this.state.removePlayer(client.sessionId);
   }
 
   onDispose() {

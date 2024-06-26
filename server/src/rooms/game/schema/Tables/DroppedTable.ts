@@ -7,11 +7,11 @@ export class Drop extends Schema {
 
 }
 
-export class DroppedTable extends Schema {
+export class DropsCollection extends Schema {
     @type([ Drop ]) drops = new ArraySchema<Drop>();
 
     reset() {
-        this.drops.clear();
+        this.drops = new ArraySchema<Drop>();
     }
 
     addDrop(sessionId: string, cards: ArraySchema) {

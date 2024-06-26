@@ -1,24 +1,26 @@
 import { Schema, type, ArraySchema } from "@colyseus/schema";
 import { Card, CARD_MAX_INTERVAL } from "./Card";
-import { Player, START_CARDS_COUNT } from "./Player";
-import { findCardsByNameAndId, increaseCardDelay } from "./MiscFunctions";
+import { Player } from "./Player";
+import { increaseCardDelay } from "./MiscFunctions";
 import { GameRoomState } from "./GameRoomState";
+import { GameRoom } from "../GameRoom";
 
-const DECK_TYPES: string[] = ["36","52"];
 const SUITS: string[] = ["Hearts", "Clubs", "Diamonds", "Spades"];
 const VALUES: string[] = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"];
-const CARD_TYPES: string[] = ["Default", "Glass"];
 
 export class Deck extends Schema {
-    private state: GameRoomState;
-    private lastCreatedCard: Card;
+    room: GameRoom;
+    roomState: GameRoomState;
+    lastCreatedCard: Card;
+
     @type("string") type: string;
     @type([ Card ]) cards = new ArraySchema<Card>();
 
-    constructor(type: string, state: GameRoomState) {
+    constructor(deckType: string, room: GameRoom, state: GameRoomState) {
         super();
-        this.state = state;
-        this.type = type;
+        this.type = deckType;
+        this.room = room;
+        this.roomState = state;
         this.init();
     }
 
@@ -30,11 +32,11 @@ export class Deck extends Schema {
                 switch (this.type) {
                     case "36":
                         if (value !== "2" && value !== "3" && value !== "4" && value !== "5") {
-                            this.addCard(suit, value, "Default");
+                            this.createCard(suit, value, "Default", 0);
                         }
                         break;
                     case "52":
-                        this.addCard(suit,value,"Default");
+                        this.createCard(suit,value,"Default", 0);
                         break;
                     default:
                         break;
@@ -46,8 +48,8 @@ export class Deck extends Schema {
     getCardsCountByName(name: string) {
         let cardsCount: number = 0;
         const allCards: Card[] = [];
-        this.state.players.forEach(player => {
-            player.cards.forEach(card => {
+        this.roomState.players.forEach(player => {
+            player.hand.cards.forEach(card => {
                 allCards.push(card);
             })
         })
@@ -58,7 +60,10 @@ export class Deck extends Schema {
         return cardsCount;
     }
 
-    addCard(suit: string, value: string, type: string, customId?: number) {
+    addCard(card: Card) {
+        this.cards.push(card);
+    }
+    createCard(suit: string, value: string, type: string, customId?: number) {
         let name: string = `${value} of ${suit}`
         let id: number = this.getCardsCountByName(name);
         let card = new Card().assign({
@@ -69,7 +74,8 @@ export class Deck extends Schema {
             type: type
         })
         this.cards.push(card);
-        this.lastCreatedCard = card;       
+        this.lastCreatedCard = card;
+        if (customId !== 0) this.room.broadcast("createNewCard", card);
     }
 
     getCard(lastCreated?: boolean) {
@@ -97,9 +103,9 @@ export class Deck extends Schema {
             let interval = CARD_MAX_INTERVAL;
         
             const dealNextCard = () => {
-              if ((index < cardsCount) && (this.cards.length > 0) && player.cards.length < START_CARDS_COUNT) {
+              if ((index < cardsCount) && (this.cards.length > 0) && player.hand.cards.length < Player.DEFAULT_HAND_SIZE) {
                 const card = this.getCard();
-                player.addCard(card);
+                player.addCardToHand(card);
                 index++;
         
                 interval = increaseCardDelay(interval);

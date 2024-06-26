@@ -1,11 +1,15 @@
-import { Schema, type, ArraySchema } from "@colyseus/schema";
-import { Card, CARD_MAX_INTERVAL } from "../Card";
+import { type } from "@colyseus/schema";
+import { CARD_MAX_INTERVAL } from "../Card";
 import { increaseCardDelay } from "../MiscFunctions";
 import { GameRoomState } from "../GameRoomState";
 import { DELAY_BEFORE_END_ROUND } from "../Delays";
+import { CardCollection } from "../CardCollection";
+import { GameRoom } from "../../GameRoom";
 
-export class CheckingTable extends Schema {
-    private state: GameRoomState;
+export class CheckingTable extends CardCollection {
+    room: GameRoom;
+    roomState: GameRoomState;
+
     public fakeCardValue: string = "";
     @type("string") checker: string = "" // SessionId
 
@@ -13,13 +17,11 @@ export class CheckingTable extends Schema {
     @type("string") loser: string = ""; // SessionId
     
     @type("string") lastTurnBy: string = ""; // SessionId
-    @type([ Card ]) cards = new ArraySchema<Card>();
     
-    constructor() {
+    constructor(room: GameRoom, state: GameRoomState) {
         super();
-    }
-    setup(state: GameRoomState) {
-        this.state = state;
+        this.room = room;
+        this.roomState = state;
     }
 
     reset() {
@@ -28,19 +30,7 @@ export class CheckingTable extends Schema {
         this.winner = "",
         this.loser = "",
         this.lastTurnBy = "",
-        this.cards.clear();
-    }
-
-    clear() {
-        this.cards.clear();
-    }
-
-    addCard(card: Card, sessionId: string) {
-        this.lastTurnBy = sessionId;
-        this.cards.push(card);
-        if (this.fakeCardValue === "") {
-            this.fakeCardValue = card.value;
-        }
+        this.clearCardCollection();
     }
 
     checkTable(sessionId: string) {
@@ -55,7 +45,7 @@ export class CheckingTable extends Schema {
                 const card = this.cards[index];
     
                 // Check card
-                this.state.room.broadcast("checkCard", card);
+                this.room.broadcast("checkCard", card);
                 if (card.value === this.fakeCardValue) correctCards++
     
                 index++;
@@ -69,8 +59,8 @@ export class CheckingTable extends Schema {
                         this.loser = this.lastTurnBy;
                     }
                     setTimeout(() => {
-                        this.state.endRound();
-                    }, (DELAY_BEFORE_END_ROUND * 1000) / this.state.room.GAME_SPEED)
+                        this.roomState.endRound();
+                    }, (DELAY_BEFORE_END_ROUND * 1000) / this.room.GAME_SPEED)
                 }
     
                 interval = increaseCardDelay(interval);

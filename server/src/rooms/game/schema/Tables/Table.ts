@@ -1,35 +1,31 @@
-import { Schema, type, ArraySchema } from "@colyseus/schema";
-import { Card, CARD_MAX_INTERVAL } from "../Card";
+import { type } from "@colyseus/schema";
+import { CARD_MAX_INTERVAL } from "../Card";
 import { Player } from "../Player";
 import { increaseCardDelay } from "../MiscFunctions";
 import { GameRoomState } from "../GameRoomState";
+import { CardCollection } from "../CardCollection";
+import { GameRoom } from "../../GameRoom";
 
-export class Table extends Schema {
-    private state: GameRoomState;
+export class Table extends CardCollection {
+    room: GameRoom;
+    roomState: GameRoomState;
+
     @type("string") lastTurnBy: string = ""; // SessionId
     @type("string") fakeCardValue: string = "";
-    @type([ Card ]) cards = new ArraySchema<Card>();
 
-    constructor() {
-        super();
-    }
-
-    setup(state: GameRoomState) {
-        this.state = state;
+    constructor(room: GameRoom, state: GameRoomState) {
+        super()
+        this.room = room;
+        this.roomState = state;
     }
 
     reset() {
-        this.cards.clear();
+        this.clearCardCollection();
         this.lastTurnBy = "";
         this.fakeCardValue = "";
     }
     setFakeCardValue(fakeCardValue: string) {
         this.fakeCardValue = fakeCardValue;
-    }
-
-    addCard(card: Card, sessionId: string) {
-        this.lastTurnBy = sessionId;
-        this.cards.push(card);
     }
 
     transferAllCardsToPlayer(player: Player) {
@@ -41,12 +37,12 @@ export class Table extends Schema {
             const transferNextCard = () => {
                 if (index < cardsCount) {
                     const card = this.cards[index];
-                    player.addCard(card);
+                    player.addCardToHand(card);
                     index++;
         
                     if (index === cardsCount) {
                       this.reset();
-                      this.state.prepareNextRound();
+                      this.roomState.prepareNextRound();
                     }
         
                     interval = increaseCardDelay(interval);
