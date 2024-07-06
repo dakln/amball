@@ -10,7 +10,7 @@ export type CreateRoomOptions = {
 
 export class GameRoom extends Room<GameRoomState> {
   GAME_SPEED = 1;
-  playersToStart = 4;
+  playersToStart = 1;
   maxClients = 4;
 
   onCreate (options: any) {

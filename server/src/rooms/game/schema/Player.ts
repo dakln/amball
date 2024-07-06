@@ -17,7 +17,7 @@ export type CreatePlayerOptions = {
 
 
 export class Player extends Schema {
-    static readonly MAX_SELECTION_SIZE = 4; // Max selected cards
+    @type("number") MAX_SELECTION_SIZE = 4; // Max selected cards available
     static readonly DEFAULT_HAND_SIZE = 9; // Max selected cards
     room: GameRoom;
     roomState: GameRoomState;
@@ -41,8 +41,8 @@ export class Player extends Schema {
         this.roomState = options.state;
 
         this.addJoker(createJoker('Textiler', 0, this));
-        this.addJoker(createJoker('Textiler', 1, this));
-        this.addJoker(createJoker('Textiler', 2, this));
+        // this.addJoker(createJoker('Textiler', 1, this));
+        // this.addJoker(createJoker('Textiler', 2, this));
     }
     // Player hand
     addCardToHand(card: Card) {
@@ -162,7 +162,7 @@ export class Player extends Schema {
 
     // Card selection
     selectCard(card: Card) {
-        if (this.selectedCards.length < Player.MAX_SELECTION_SIZE) {
+        if (this.selectedCards.length < this.MAX_SELECTION_SIZE) {
             this.selectedCards.push(card);
         }
     }
