@@ -1,0 +1,738 @@
+{
+	"name": "Menu",
+	"layers": [
+		{
+			"name": "Particles",
+			"overriden": 1,
+			"subLayers": [],
+			"instances": [
+				{
+					"type": "Particles",
+					"properties": {
+						"rate": 50,
+						"spray-cone": 360,
+						"type": "continuous-spray",
+						"object": -1,
+						"initially-visible": true,
+						"live-preview": false,
+						"speed": 2,
+						"size": 2,
+						"opacity": 100,
+						"grow-rate": 0.4,
+						"x-randomiser": 854,
+						"y-randomiser": 480,
+						"initial-speed-randomiser": 4,
+						"size-randomiser": 2,
+						"grow-rate-randomiser": 0.4,
+						"acceleration": -50,
+						"gravity": 10,
+						"angle-randomiser": 5,
+						"life-speed-randomiser": 1,
+						"opacity-randomiser": 30,
+						"destroy-mode": "fade-to-invisible",
+						"timeout": 2
+					},
+					"uid": 135,
+					"instanceVariables": {},
+					"behaviors": {},
+					"effects": {
+						"LinearGradient": {
+							"isEnabled": true,
+							"parameters": {
+								"color1": [
+									1,
+									0,
+									0.34901960784313724,
+									1
+								],
+								"color2": [
+									0.5019607843137255,
+									0,
+									1,
+									1
+								],
+								"angle": 0
+							}
+						}
+					},
+					"world": {
+						"x": 413,
+						"y": 240,
+						"width": 28,
+						"height": 32,
+						"originX": 0,
+						"originY": 0.5,
+						"color": [
+							1,
+							1,
+							1,
+							1
+						],
+						"angle": 0,
+						"zElevation": 0
+					}
+				}
+			],
+			"sid": 667042679726130,
+			"effectTypes": [
+				{
+					"effectId": "davider_iridiscent",
+					"name": "IridiscentTextureEffect",
+					"instance": {
+						"isEnabled": false,
+						"parameters": {
+							"speed": 0.02
+						}
+					}
+				},
+				{
+					"effectId": "swirl",
+					"name": "Swirl",
+					"instance": {
+						"isEnabled": false,
+						"parameters": {
+							"radius": 0.4660000000000001,
+							"angle": -0.5
+						}
+					}
+				}
+			],
+			"isInitiallyVisible": true,
+			"isInitiallyInteractive": true,
+			"isHTMLElementsLayer": false,
+			"color": [
+				1,
+				1,
+				1,
+				0.2
+			],
+			"backgroundColor": [
+				0.9019607843137255,
+				0.9019607843137255,
+				0.9019607843137255,
+				1
+			],
+			"isTransparent": false,
+			"parallaxX": 0,
+			"parallaxY": 0,
+			"scaleRate": 1,
+			"forceOwnTexture": false,
+			"renderingMode": "3d",
+			"drawOrder": "z-order",
+			"useRenderCells": false,
+			"blendMode": "normal",
+			"zElevation": 0,
+			"global": false
+		},
+		{
+			"name": "UiMenu",
+			"overriden": 0,
+			"subLayers": [],
+			"instances": [
+				{
+					"type": "obj_Button",
+					"properties": {
+						"left-margin": 8,
+						"right-margin": 8,
+						"top-margin": 8,
+						"bottom-margin": 8,
+						"edges": "tile",
+						"fill": "tile",
+						"initially-visible": true,
+						"origin": "center",
+						"seams": "exact"
+					},
+					"uid": 67,
+					"instanceVariables": {
+						"Id": 0,
+						"Name": "CreateGame",
+						"Enabled": true,
+						"Class": "Main",
+						"Chosable": false,
+						"Chosen": false,
+						"Width_": 0,
+						"Height_": 0
+					},
+					"behaviors": {
+						"Tween": {
+							"properties": {
+								"enabled": true
+							}
+						},
+						"BetterAnchor": {
+							"properties": {
+								"resize_mode": "cover",
+								"anchor_left": "center",
+								"constraint_left": "absolute",
+								"anchor_top": "bottom",
+								"constraint_top": "absolute",
+								"anchor_right": "center",
+								"constraint_right": "absolute",
+								"anchor_bottom": "top",
+								"constraint_bottom": "absolute",
+								"anchor_to": "screen",
+								"enable": false
+							}
+						},
+						"Anchor": {
+							"properties": {
+								"left-edge": "none",
+								"top-edge": "window-bottom",
+								"right-edge": "none",
+								"bottom-edge": "window-bottom",
+								"enabled": false
+							}
+						}
+					},
+					"effects": {
+						"SetColor": {
+							"isEnabled": false,
+							"parameters": {
+								"color": [
+									0,
+									1,
+									0.11764705882352941,
+									1
+								]
+							}
+						},
+						"AdjustHSL": {
+							"isEnabled": true,
+							"parameters": {
+								"hue": 0,
+								"saturation": 1,
+								"luminosity": 1
+							}
+						},
+						"BetterOutline": {
+							"isEnabled": false,
+							"parameters": {
+								"color": [
+									1,
+									1,
+									1,
+									1
+								],
+								"width": 1.5,
+								"precision-step": 0,
+								"samples": 4
+							}
+						},
+						"UltimateDropShadowColor": {
+							"isEnabled": true,
+							"parameters": {
+								"distance": 8,
+								"angle": 90,
+								"opacity": 0.7,
+								"hue": 180,
+								"saturation": 0,
+								"brightness": 0,
+								"blurradius": 0
+							}
+						}
+					},
+					"sceneGraphData": {
+						"parent-uid": null,
+						"uid": 67,
+						"children": [
+							{
+								"uid": 68,
+								"flags": {
+									"x": true,
+									"y": true,
+									"z": false,
+									"w": false,
+									"h": false,
+									"a": false,
+									"o": false,
+									"v": false,
+									"d": false,
+									"sm": "normal"
+								}
+							},
+							{
+								"uid": 65,
+								"flags": {
+									"x": true,
+									"y": true,
+									"z": true,
+									"w": true,
+									"h": true,
+									"a": true,
+									"o": false,
+									"v": false,
+									"d": true,
+									"sm": "normal"
+								}
+							}
+						],
+						"flags": {
+							"x": true,
+							"y": true,
+							"z": false,
+							"w": false,
+							"h": false,
+							"a": false,
+							"o": false,
+							"v": false,
+							"d": true,
+							"sm": "normal"
+						},
+						"preview": {
+							"transformX": 0,
+							"transformY": 0,
+							"transformZElevation": 0,
+							"transformW": 0,
+							"transformH": 0,
+							"transformA": 0,
+							"transformSX": 0,
+							"transformSY": 0,
+							"transformO": 0,
+							"previewSceneGraph": false
+						}
+					},
+					"world": {
+						"x": 363,
+						"y": 240,
+						"width": 112,
+						"height": 50,
+						"originX": 0.5,
+						"originY": 0.5,
+						"color": [
+							1,
+							0.5333333333333333,
+							0,
+							1
+						],
+						"angle": 0,
+						"zElevation": 0
+					}
+				},
+				{
+					"type": "obj_Button",
+					"properties": {
+						"left-margin": 8,
+						"right-margin": 8,
+						"top-margin": 8,
+						"bottom-margin": 8,
+						"edges": "tile",
+						"fill": "tile",
+						"initially-visible": true,
+						"origin": "center",
+						"seams": "exact"
+					},
+					"uid": 68,
+					"instanceVariables": {
+						"Id": 0,
+						"Name": "FindGame",
+						"Enabled": true,
+						"Class": "Main",
+						"Chosable": false,
+						"Chosen": false,
+						"Width_": 0,
+						"Height_": 0
+					},
+					"behaviors": {
+						"Tween": {
+							"properties": {
+								"enabled": true
+							}
+						},
+						"BetterAnchor": {
+							"properties": {
+								"resize_mode": "contain",
+								"anchor_left": "center",
+								"constraint_left": "absolute",
+								"anchor_top": "bottom",
+								"constraint_top": "absolute",
+								"anchor_right": "center",
+								"constraint_right": "absolute",
+								"anchor_bottom": "bottom",
+								"constraint_bottom": "absolute",
+								"anchor_to": "screen",
+								"enable": false
+							}
+						},
+						"Anchor": {
+							"properties": {
+								"left-edge": "window-left",
+								"top-edge": "window-top",
+								"right-edge": "none",
+								"bottom-edge": "none",
+								"enabled": false
+							}
+						}
+					},
+					"effects": {
+						"SetColor": {
+							"isEnabled": false,
+							"parameters": {
+								"color": [
+									0,
+									1,
+									0.11764705882352941,
+									1
+								]
+							}
+						},
+						"AdjustHSL": {
+							"isEnabled": true,
+							"parameters": {
+								"hue": 0,
+								"saturation": 1,
+								"luminosity": 1
+							}
+						},
+						"BetterOutline": {
+							"isEnabled": false,
+							"parameters": {
+								"color": [
+									1,
+									1,
+									1,
+									1
+								],
+								"width": 1.5,
+								"precision-step": 0,
+								"samples": 4
+							}
+						},
+						"UltimateDropShadowColor": {
+							"isEnabled": true,
+							"parameters": {
+								"distance": 8,
+								"angle": 90,
+								"opacity": 0.7,
+								"hue": 180,
+								"saturation": 0,
+								"brightness": 0,
+								"blurradius": 0
+							}
+						}
+					},
+					"sceneGraphData": {
+						"parent-uid": 67,
+						"uid": 68,
+						"children": [
+							{
+								"uid": 66,
+								"flags": {
+									"x": true,
+									"y": true,
+									"z": true,
+									"w": true,
+									"h": true,
+									"a": true,
+									"o": false,
+									"v": false,
+									"d": true,
+									"sm": "normal"
+								}
+							}
+						],
+						"flags": {
+							"x": true,
+							"y": true,
+							"z": false,
+							"w": false,
+							"h": false,
+							"a": false,
+							"o": false,
+							"v": false,
+							"d": false,
+							"sm": "normal"
+						},
+						"preview": {
+							"transformX": 0,
+							"transformY": 0,
+							"transformZElevation": 0,
+							"transformW": 0,
+							"transformH": 0,
+							"transformA": 0,
+							"transformSX": 0,
+							"transformSY": 0,
+							"transformO": 0,
+							"previewSceneGraph": false
+						}
+					},
+					"world": {
+						"x": 491,
+						"y": 240,
+						"width": 112,
+						"height": 50,
+						"originX": 0.5,
+						"originY": 0.5,
+						"color": [
+							1,
+							0,
+							0.34901960784313724,
+							1
+						],
+						"angle": 0,
+						"zElevation": 0
+					}
+				},
+				{
+					"type": "SpriteFont",
+					"properties": {
+						"text": "Создать игру",
+						"enable-bbcode": true,
+						"character-width": 37,
+						"character-height": 56,
+						"character-set": "абвгдежзийклмнопрстуфхцчшщъыьэюяАБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.,;:?!-_~#\"'&()[]|`\\/@°+=*$€<>%",
+						"spacing-data": "[[29,\" \"],[10,\"il.,;:!'|\"],[13,\"`\"],[17,\"j()[]\"],[20,\"ft\\\"°*<>\"],[24,\"абвгезийклнопрстухчьэяАБВГЕЗЛНОПРСТУХЧЬЭЯABCDEFGHIJLOPQRSTUVXYZabcdeghknopqrsuvxyz0123456789?-_\\/+=%\"],[28,\"дцъДИЙКЦЪKMNWmw~#&@$€\"],[31,\"жмфшЖМФШ\"],[35,\"щыюЩЫЮ\"]]",
+						"scale": 0.35,
+						"character-spacing": 0,
+						"line-height": 0,
+						"horizontal-alignment": "center",
+						"vertical-alignment": "center",
+						"wrapping": "word",
+						"initially-visible": true,
+						"origin": "center",
+						"read-aloud": false
+					},
+					"uid": 65,
+					"instanceVariables": {},
+					"behaviors": {},
+					"sceneGraphData": {
+						"parent-uid": 67,
+						"uid": 65,
+						"flags": {
+							"x": true,
+							"y": true,
+							"z": true,
+							"w": true,
+							"h": true,
+							"a": true,
+							"o": false,
+							"v": false,
+							"d": true,
+							"sm": "normal"
+						},
+						"preview": {
+							"transformX": 0,
+							"transformY": 0,
+							"transformZElevation": 0,
+							"transformW": 0,
+							"transformH": 0,
+							"transformA": 0,
+							"transformSX": 0,
+							"transformSY": 0,
+							"transformO": 0,
+							"previewSceneGraph": false
+						}
+					},
+					"world": {
+						"x": 363,
+						"y": 240,
+						"width": 140,
+						"height": 40,
+						"originX": 0.5,
+						"originY": 0.5,
+						"color": [
+							1,
+							1,
+							1,
+							1
+						],
+						"angle": 0,
+						"zElevation": 0
+					}
+				},
+				{
+					"type": "SpriteFont",
+					"properties": {
+						"text": "Найти игру",
+						"enable-bbcode": true,
+						"character-width": 37,
+						"character-height": 56,
+						"character-set": "абвгдежзийклмнопрстуфхцчшщъыьэюяАБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.,;:?!-_~#\"'&()[]|`\\/@°+=*$€<>%",
+						"spacing-data": "[[29,\" \"],[10,\"il.,;:!'|\"],[13,\"`\"],[17,\"j()[]\"],[20,\"ft\\\"°*<>\"],[24,\"абвгезийклнопрстухчьэяАБВГЕЗЛНОПРСТУХЧЬЭЯABCDEFGHIJLOPQRSTUVXYZabcdeghknopqrsuvxyz0123456789?-_\\/+=%\"],[28,\"дцъДИЙКЦЪKMNWmw~#&@$€\"],[31,\"жмфшЖМФШ\"],[35,\"щыюЩЫЮ\"]]",
+						"scale": 0.35,
+						"character-spacing": 0,
+						"line-height": 0,
+						"horizontal-alignment": "center",
+						"vertical-alignment": "center",
+						"wrapping": "word",
+						"initially-visible": true,
+						"origin": "center",
+						"read-aloud": false
+					},
+					"uid": 66,
+					"instanceVariables": {},
+					"behaviors": {},
+					"sceneGraphData": {
+						"parent-uid": 68,
+						"uid": 66,
+						"flags": {
+							"x": true,
+							"y": true,
+							"z": true,
+							"w": true,
+							"h": true,
+							"a": true,
+							"o": false,
+							"v": false,
+							"d": true,
+							"sm": "normal"
+						},
+						"preview": {
+							"transformX": 0,
+							"transformY": 0,
+							"transformZElevation": 0,
+							"transformW": 0,
+							"transformH": 0,
+							"transformA": 0,
+							"transformSX": 0,
+							"transformSY": 0,
+							"transformO": 0,
+							"previewSceneGraph": false
+						}
+					},
+					"world": {
+						"x": 491,
+						"y": 240,
+						"width": 140,
+						"height": 40,
+						"originX": 0.5,
+						"originY": 0.5,
+						"color": [
+							1,
+							1,
+							1,
+							1
+						],
+						"angle": 0,
+						"zElevation": 0
+					}
+				}
+			],
+			"sid": 533769058082177,
+			"effectTypes": [],
+			"isInitiallyVisible": true,
+			"isInitiallyInteractive": true,
+			"isHTMLElementsLayer": false,
+			"color": [
+				1,
+				1,
+				1,
+				1
+			],
+			"backgroundColor": [
+				1,
+				1,
+				1,
+				1
+			],
+			"isTransparent": true,
+			"parallaxX": 0,
+			"parallaxY": 0,
+			"scaleRate": 1,
+			"forceOwnTexture": false,
+			"renderingMode": "3d",
+			"drawOrder": "z-order",
+			"useRenderCells": false,
+			"blendMode": "normal",
+			"zElevation": 0,
+			"global": false
+		},
+		{
+			"name": "SystemUi",
+			"overriden": 0,
+			"subLayers": [],
+			"instances": [],
+			"sid": 370843007268884,
+			"effectTypes": [],
+			"isInitiallyVisible": true,
+			"isInitiallyInteractive": true,
+			"isHTMLElementsLayer": false,
+			"color": [
+				1,
+				1,
+				1,
+				1
+			],
+			"backgroundColor": [
+				1,
+				1,
+				1,
+				1
+			],
+			"isTransparent": true,
+			"parallaxX": 0,
+			"parallaxY": 0,
+			"scaleRate": 1,
+			"forceOwnTexture": false,
+			"renderingMode": "3d",
+			"drawOrder": "z-order",
+			"useRenderCells": false,
+			"blendMode": "normal",
+			"zElevation": 0,
+			"global": false
+		}
+	],
+	"sid": 967621412515804,
+	"nonworld-instances": [],
+	"effectTypes": [
+		{
+			"effectId": "noise",
+			"name": "Noise",
+			"instance": {
+				"isEnabled": true,
+				"parameters": {
+					"intensity": 0.05,
+					"color": 0
+				}
+			}
+		},
+		{
+			"effectId": "pulse",
+			"name": "Pulse",
+			"instance": {
+				"isEnabled": true,
+				"parameters": {
+					"intensity": 0.014999999999999293,
+					"lighting": 0,
+					"speed": 10,
+					"frequency": 30,
+					"center-x": 0.5,
+					"center-y": 0.5
+				}
+			}
+		},
+		{
+			"effectId": "warpobject",
+			"name": "WarpObject",
+			"instance": {
+				"isEnabled": true,
+				"parameters": {
+					"x-frequency": 1,
+					"y-frequency": 1,
+					"x-amplitude": 1,
+					"y-amplitude": 0.5,
+					"x-speed": 0.1,
+					"y-speed": 0.1
+				}
+			}
+		},
+		{
+			"effectId": "hsladjust",
+			"name": "AdjustHSL",
+			"instance": {
+				"isEnabled": false,
+				"parameters": {
+					"hue": 0,
+					"saturation": 1,
+					"luminosity": 1
+				}
+			}
+		}
+	],
+	"width": 854,
+	"height": 480,
+	"unboundedScrolling": false,
+	"vpX": 0.5,
+	"vpY": 0.5,
+	"projection": "perspective",
+	"eventSheet": "ES_Menu"
+}

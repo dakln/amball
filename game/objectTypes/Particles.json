@@ -1,0 +1,26 @@
+{
+	"name": "Particles",
+	"plugin-id": "Particles",
+	"sid": 380267476417857,
+	"isGlobal": false,
+	"instanceVariables": [],
+	"behaviorTypes": [],
+	"effectTypes": [
+		{
+			"effectId": "lineargradient",
+			"name": "LinearGradient"
+		}
+	],
+	"image": {
+		"width": 10,
+		"height": 10,
+		"originX": 0.5,
+		"originY": 0.5,
+		"originalSource": "",
+		"exportFormat": "lossless",
+		"exportQuality": 0.8,
+		"imageSpriteId": 7713335,
+		"useCollisionPoly": true,
+		"tag": ""
+	}
+}

@@ -1,0 +1,56 @@
+{
+	"name": "obj_PlayerCardsPatch",
+	"plugin-id": "NinePatch",
+	"sid": 308844647651211,
+	"isGlobal": false,
+	"instanceVariables": [
+		{
+			"name": "Hidden",
+			"type": "boolean",
+			"desc": "",
+			"show": true,
+			"sid": 431331378221236
+		},
+		{
+			"name": "HAND_MIN_X",
+			"type": "number",
+			"desc": "",
+			"show": true,
+			"sid": 839381191581857
+		},
+		{
+			"name": "HAND_MAX_X",
+			"type": "number",
+			"desc": "",
+			"show": true,
+			"sid": 965073225055997
+		},
+		{
+			"name": "HAND_Y",
+			"type": "number",
+			"desc": "",
+			"show": true,
+			"sid": 748518072277400
+		}
+	],
+	"behaviorTypes": [
+		{
+			"behaviorId": "Tween",
+			"name": "Tween",
+			"sid": 760390067458569
+		}
+	],
+	"effectTypes": [],
+	"image": {
+		"width": 20,
+		"height": 20,
+		"originX": 0.5,
+		"originY": 0.5,
+		"originalSource": "",
+		"exportFormat": "lossless",
+		"exportQuality": 0.8,
+		"imageSpriteId": 2318252,
+		"useCollisionPoly": true,
+		"tag": ""
+	}
+}

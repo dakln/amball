@@ -1,0 +1,101 @@
+{
+	"name": "Buttons",
+	"plugin-id": "NinePatch",
+	"sid": 335959788216703,
+	"instanceVariables": [
+		{
+			"name": "Id",
+			"type": "number",
+			"desc": "",
+			"show": true,
+			"sid": 805049068414876
+		},
+		{
+			"name": "Name",
+			"type": "string",
+			"desc": "",
+			"show": true,
+			"sid": 689003301768460
+		},
+		{
+			"name": "Enabled",
+			"type": "boolean",
+			"desc": "",
+			"show": true,
+			"sid": 266051020468478
+		},
+		{
+			"name": "Class",
+			"type": "string",
+			"desc": "",
+			"show": true,
+			"sid": 749733999468831
+		},
+		{
+			"name": "Chosable",
+			"type": "boolean",
+			"desc": "",
+			"show": true,
+			"sid": 849764081859887
+		},
+		{
+			"name": "Chosen",
+			"type": "boolean",
+			"desc": "",
+			"show": true,
+			"sid": 296246240100445
+		},
+		{
+			"name": "Width_",
+			"type": "number",
+			"desc": "",
+			"show": true,
+			"sid": 888610476425524
+		},
+		{
+			"name": "Height_",
+			"type": "number",
+			"desc": "",
+			"show": true,
+			"sid": 845278095022721
+		}
+	],
+	"behaviorTypes": [
+		{
+			"behaviorId": "Tween",
+			"name": "Tween",
+			"sid": 719677763981489
+		},
+		{
+			"behaviorId": "skymen_parent_anchor",
+			"name": "BetterAnchor",
+			"sid": 715034196433493
+		},
+		{
+			"behaviorId": "Anchor",
+			"name": "Anchor",
+			"sid": 825512964182098
+		}
+	],
+	"effectTypes": [
+		{
+			"effectId": "setcolor",
+			"name": "SetColor"
+		},
+		{
+			"effectId": "hsladjust",
+			"name": "AdjustHSL"
+		},
+		{
+			"effectId": "skymen_BetterOutline",
+			"name": "BetterOutline"
+		},
+		{
+			"effectId": "ultimatedropshadowcolor",
+			"name": "UltimateDropShadowColor"
+		}
+	],
+	"members": [
+		"obj_Button"
+	]
+}

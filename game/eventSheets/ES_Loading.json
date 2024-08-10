@@ -1,0 +1,204 @@
+{
+	"name": "ES_Loading",
+	"events": [
+		{
+			"eventType": "variable",
+			"name": "SwirlSpeed",
+			"type": "number",
+			"initialValue": "6",
+			"comment": "",
+			"isStatic": false,
+			"isConstant": false,
+			"sid": 171398257898406
+		},
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "on-start-of-layout",
+					"objectClass": "System",
+					"sid": 337682776016406
+				}
+			],
+			"actions": [
+				{
+					"id": "tween-value",
+					"objectClass": "obj_LoadingTweens",
+					"sid": 563624544663744,
+					"behaviorType": "Tween",
+					"parameters": {
+						"tags": "\"Swirl_Radius\"",
+						"start-value": "50",
+						"end-value": "0",
+						"time": "SwirlSpeed",
+						"ease": "easeoutexpo",
+						"destroy-on-complete": "no",
+						"loop": "no",
+						"ping-pong": "no",
+						"repeat-count": "1"
+					}
+				},
+				{
+					"id": "tween-value",
+					"objectClass": "obj_LoadingTweens",
+					"sid": 910997186537874,
+					"behaviorType": "Tween",
+					"parameters": {
+						"tags": "\"Swirl_Angle\"",
+						"start-value": "180",
+						"end-value": "0",
+						"time": "SwirlSpeed / 2",
+						"ease": "easeoutexpo",
+						"destroy-on-complete": "no",
+						"loop": "no",
+						"ping-pong": "no",
+						"repeat-count": "1"
+					}
+				},
+				{
+					"id": "tween-value",
+					"objectClass": "obj_LoadingTweens",
+					"sid": 518440507011802,
+					"behaviorType": "Tween",
+					"parameters": {
+						"tags": "\"LayoutScale\"",
+						"start-value": "0",
+						"end-value": "1",
+						"time": "SwirlSpeed",
+						"ease": "easeoutexpo",
+						"destroy-on-complete": "no",
+						"loop": "no",
+						"ping-pong": "no",
+						"repeat-count": "1"
+					}
+				},
+				{
+					"id": "tween-value",
+					"objectClass": "obj_LoadingTweens",
+					"sid": 566820749014900,
+					"behaviorType": "Tween",
+					"parameters": {
+						"tags": "\"Buldge_Scale\"",
+						"start-value": "40",
+						"end-value": "0",
+						"time": "SwirlSpeed",
+						"ease": "easeoutexpo",
+						"destroy-on-complete": "no",
+						"loop": "no",
+						"ping-pong": "no",
+						"repeat-count": "1"
+					}
+				}
+			],
+			"sid": 441528476796321
+		},
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "is-playing",
+					"objectClass": "obj_LoadingTweens",
+					"sid": 716968668131976,
+					"behaviorType": "Tween",
+					"parameters": {
+						"tags": "\"Swirl_Radius\""
+					}
+				}
+			],
+			"actions": [
+				{
+					"id": "set-layout-effect-parameter",
+					"objectClass": "System",
+					"sid": 229414076051778,
+					"parameters": {
+						"effect": "\"Swirl\"",
+						"parameter-index": "0",
+						"value": "obj_LoadingTweens.Tween.Value(\"Swirl_Radius\")"
+					}
+				}
+			],
+			"sid": 341168445112474
+		},
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "is-playing",
+					"objectClass": "obj_LoadingTweens",
+					"sid": 233998860937677,
+					"behaviorType": "Tween",
+					"parameters": {
+						"tags": "\"Swirl_Angle\""
+					}
+				}
+			],
+			"actions": [
+				{
+					"id": "set-layout-effect-parameter",
+					"objectClass": "System",
+					"sid": 118544491738021,
+					"parameters": {
+						"effect": "\"Swirl\"",
+						"parameter-index": "1",
+						"value": "obj_LoadingTweens.Tween.Value(\"Swirl_Angle\")"
+					}
+				}
+			],
+			"sid": 647015850046932
+		},
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "is-playing",
+					"objectClass": "obj_LoadingTweens",
+					"sid": 889638722849826,
+					"behaviorType": "Tween",
+					"parameters": {
+						"tags": "\"LayoutScale\""
+					}
+				}
+			],
+			"actions": [
+				{
+					"id": "set-layer-scale",
+					"objectClass": "System",
+					"sid": 945389702627705,
+					"parameters": {
+						"layer": "\"UiLoading\"",
+						"scale": "obj_LoadingTweens.Tween.Value(\"LayoutScale\")"
+					}
+				}
+			],
+			"sid": 689839733658512
+		},
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "is-playing",
+					"objectClass": "obj_LoadingTweens",
+					"sid": 521169312302979,
+					"behaviorType": "Tween",
+					"parameters": {
+						"tags": "\"Buldge_Scale\""
+					}
+				}
+			],
+			"actions": [
+				{
+					"id": "set-layout-effect-parameter",
+					"objectClass": "System",
+					"sid": 233745350321647,
+					"parameters": {
+						"effect": "\"Bulge\"",
+						"parameter-index": "1",
+						"value": "obj_LoadingTweens.Tween.Value(\"Buldge_Scale\")"
+					}
+				}
+			],
+			"sid": 504678838741905
+		}
+	],
+	"sid": 346279334365560
+}

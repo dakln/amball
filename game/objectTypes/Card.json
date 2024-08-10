@@ -1,0 +1,67 @@
+{
+	"name": "Card",
+	"plugin-id": "Sprite",
+	"sid": 588363659589087,
+	"isGlobal": false,
+	"instanceVariables": [
+		{
+			"name": "OffsetX",
+			"type": "number",
+			"desc": "",
+			"show": true,
+			"sid": 954177476802140
+		},
+		{
+			"name": "OffsetY",
+			"type": "number",
+			"desc": "",
+			"show": true,
+			"sid": 507890117358887
+		},
+		{
+			"name": "DefaultScale",
+			"type": "number",
+			"desc": "",
+			"show": true,
+			"sid": 377600895641441
+		},
+		{
+			"name": "CenterX",
+			"type": "number",
+			"desc": "",
+			"show": true,
+			"sid": 678067139237725
+		}
+	],
+	"behaviorTypes": [],
+	"effectTypes": [],
+	"animations": {
+		"items": [
+			{
+				"frames": [
+					{
+						"width": 71,
+						"height": 95,
+						"originX": 0.5070422535211268,
+						"originY": 0.5052631578947369,
+						"originalSource": "",
+						"exportFormat": "lossless",
+						"exportQuality": 0.8,
+						"imageSpriteId": 4215471,
+						"useCollisionPoly": true,
+						"duration": 1,
+						"tag": ""
+					}
+				],
+				"sid": 211269350397024,
+				"name": "Animation 1",
+				"isLooping": false,
+				"isPingPong": false,
+				"repeatCount": 1,
+				"repeatTo": 0,
+				"speed": 5
+			}
+		],
+		"subfolders": []
+	}
+}

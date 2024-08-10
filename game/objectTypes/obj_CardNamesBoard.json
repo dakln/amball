@@ -1,0 +1,27 @@
+{
+	"name": "obj_CardNamesBoard",
+	"plugin-id": "NinePatch",
+	"sid": 120111983209553,
+	"isGlobal": false,
+	"instanceVariables": [],
+	"behaviorTypes": [
+		{
+			"behaviorId": "Tween",
+			"name": "Tween",
+			"sid": 308388877250954
+		}
+	],
+	"effectTypes": [],
+	"image": {
+		"width": 20,
+		"height": 20,
+		"originX": 0.5,
+		"originY": 0.5,
+		"originalSource": "",
+		"exportFormat": "lossless",
+		"exportQuality": 0.8,
+		"imageSpriteId": 3111592,
+		"useCollisionPoly": true,
+		"tag": ""
+	}
+}

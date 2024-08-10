@@ -1,0 +1,209 @@
+{
+	"name": "ES_Menu",
+	"events": [
+		{
+			"eventType": "variable",
+			"name": "USERNAME",
+			"type": "string",
+			"initialValue": "DAKLN",
+			"comment": "",
+			"isStatic": false,
+			"isConstant": false,
+			"sid": 983087903011714
+		},
+		{
+			"eventType": "include",
+			"includeSheet": "ES_System"
+		},
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "on-start-of-layout",
+					"objectClass": "System",
+					"sid": 243383161630335
+				}
+			],
+			"actions": [],
+			"sid": 484561795228990
+		},
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "on-touched-object",
+					"objectClass": "Touch",
+					"sid": 239572995160623,
+					"parameters": {
+						"object": "Buttons",
+						"type": "start"
+					}
+				},
+				{
+					"id": "is-boolean-instance-variable-set",
+					"objectClass": "Buttons",
+					"sid": 317552744016566,
+					"parameters": {
+						"instance-variable": "Enabled"
+					}
+				},
+				{
+					"id": "compare-instance-variable",
+					"objectClass": "Buttons",
+					"sid": 130119877296496,
+					"parameters": {
+						"instance-variable": "Class",
+						"comparison": 0,
+						"value": "\"Main\""
+					}
+				}
+			],
+			"actions": [],
+			"sid": 406967148494533,
+			"children": [
+				{
+					"eventType": "block",
+					"conditions": [
+						{
+							"id": "compare-instance-variable",
+							"objectClass": "Buttons",
+							"sid": 964549913446022,
+							"parameters": {
+								"instance-variable": "Name",
+								"comparison": 0,
+								"value": "\"CreateGame\""
+							}
+						}
+					],
+					"actions": [
+						{
+							"callFunction": "createGame",
+							"sid": 305072850067647,
+							"parameters": [
+								"\"36\""
+							]
+						}
+					],
+					"sid": 511954617113455
+				},
+				{
+					"eventType": "block",
+					"conditions": [
+						{
+							"id": "compare-instance-variable",
+							"objectClass": "Buttons",
+							"sid": 163167296811316,
+							"parameters": {
+								"instance-variable": "Name",
+								"comparison": 0,
+								"value": "\"FindGame\""
+							}
+						}
+					],
+					"actions": [
+						{
+							"callFunction": "findGame",
+							"sid": 712464500217636,
+							"parameters": [
+								"\"36\""
+							]
+						}
+					],
+					"sid": 285675623084307
+				}
+			]
+		},
+		{
+			"functionName": "createGame",
+			"functionDescription": "",
+			"functionCategory": "",
+			"functionReturnType": "none",
+			"functionCopyPicked": false,
+			"functionIsAsync": false,
+			"functionParameters": [
+				{
+					"name": "deckType",
+					"type": "string",
+					"initialValue": "36",
+					"comment": "36 | 52",
+					"sid": 450030123678600
+				}
+			],
+			"eventType": "function-block",
+			"conditions": [],
+			"actions": [
+				{
+					"id": "create-room",
+					"objectClass": "Server",
+					"sid": 993003605102642,
+					"parameters": {
+						"name": "\"game\"",
+						"options": "Server.JSON(\"{\r\nusername: '\"&USERNAME&\"',\r\ndeckType: '\"&deckType&\"'\r\n}\")"
+					}
+				}
+			],
+			"sid": 818917651415225
+		},
+		{
+			"functionName": "findGame",
+			"functionDescription": "",
+			"functionCategory": "",
+			"functionReturnType": "none",
+			"functionCopyPicked": false,
+			"functionIsAsync": false,
+			"functionParameters": [
+				{
+					"name": "deckType",
+					"type": "string",
+					"initialValue": "36",
+					"comment": "36 | 52",
+					"sid": 370869851090888
+				}
+			],
+			"eventType": "function-block",
+			"conditions": [],
+			"actions": [
+				{
+					"id": "join-or-create-room",
+					"objectClass": "Server",
+					"sid": 461812291503947,
+					"parameters": {
+						"name": "\"game\"",
+						"options": "Server.JSON(\"{\r\nusername: '\"&USERNAME&\"',\r\ndeckType: '\"&deckType&\"'\r\n}\")"
+					}
+				}
+			],
+			"sid": 979622713063559
+		},
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "on-join-room",
+					"objectClass": "Server",
+					"sid": 805130790904602
+				}
+			],
+			"actions": [
+				{
+					"id": "wait",
+					"objectClass": "System",
+					"sid": 589372816882138,
+					"parameters": {
+						"seconds": "0.5"
+					}
+				},
+				{
+					"id": "go-to-layout",
+					"objectClass": "System",
+					"sid": 445109316269044,
+					"parameters": {
+						"layout": "Game"
+					}
+				}
+			],
+			"sid": 718453385227301
+		}
+	],
+	"sid": 662263348835726
+}

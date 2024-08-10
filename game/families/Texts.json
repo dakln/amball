@@ -1,0 +1,62 @@
+{
+	"name": "Texts",
+	"plugin-id": "Text",
+	"sid": 305245721479516,
+	"instanceVariables": [
+		{
+			"name": "Id",
+			"type": "number",
+			"desc": "",
+			"show": true,
+			"sid": 673949704854552
+		},
+		{
+			"name": "Name",
+			"type": "string",
+			"desc": "",
+			"show": true,
+			"sid": 667631596778410
+		},
+		{
+			"name": "TextString",
+			"type": "string",
+			"desc": "",
+			"show": true,
+			"sid": 182433666567871
+		},
+		{
+			"name": "Jumping",
+			"type": "boolean",
+			"desc": "",
+			"show": true,
+			"sid": 326099168326041
+		},
+		{
+			"name": "JumpingActiveWhileButtonEnabled",
+			"type": "boolean",
+			"desc": "",
+			"show": true,
+			"sid": 560642525552221
+		}
+	],
+	"behaviorTypes": [
+		{
+			"behaviorId": "Anchor",
+			"name": "Anchor",
+			"sid": 689216507487615
+		}
+	],
+	"effectTypes": [
+		{
+			"effectId": "skymen_DropShadow",
+			"name": "DropShadow"
+		}
+	],
+	"members": [
+		"TCardsInDeckCount",
+		"TButton",
+		"TCurrentTableCardsCount",
+		"Text",
+		"TButton2"
+	]
+}

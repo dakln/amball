@@ -1,0 +1,70 @@
+{
+	"name": "obj_EnemyCardsPatch",
+	"plugin-id": "NinePatch",
+	"sid": 998714409440575,
+	"isGlobal": false,
+	"instanceVariables": [
+		{
+			"name": "Busy",
+			"type": "boolean",
+			"desc": "",
+			"show": true,
+			"sid": 157881810616526
+		},
+		{
+			"name": "SessionId",
+			"type": "string",
+			"desc": "",
+			"show": true,
+			"sid": 771919089840527
+		},
+		{
+			"name": "PlayerNumber",
+			"type": "number",
+			"desc": "",
+			"show": true,
+			"sid": 930445577188123
+		},
+		{
+			"name": "HAND_MIN_X",
+			"type": "number",
+			"desc": "",
+			"show": true,
+			"sid": 476431192964138
+		},
+		{
+			"name": "HAND_MAX_X",
+			"type": "number",
+			"desc": "",
+			"show": true,
+			"sid": 175581896063814
+		},
+		{
+			"name": "HAND_Y",
+			"type": "number",
+			"desc": "",
+			"show": true,
+			"sid": 730050930403165
+		}
+	],
+	"behaviorTypes": [
+		{
+			"behaviorId": "Anchor",
+			"name": "Anchor",
+			"sid": 247909366892428
+		}
+	],
+	"effectTypes": [],
+	"image": {
+		"width": 20,
+		"height": 20,
+		"originX": 0.5,
+		"originY": 0.5,
+		"originalSource": "",
+		"exportFormat": "lossless",
+		"exportQuality": 0.8,
+		"imageSpriteId": 2000747,
+		"useCollisionPoly": true,
+		"tag": ""
+	}
+}

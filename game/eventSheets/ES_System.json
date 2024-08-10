@@ -1,0 +1,3279 @@
+{
+	"name": "ES_System",
+	"events": [
+		{
+			"eventType": "variable",
+			"name": "BUTTONS_ANIMATION_TIME",
+			"type": "number",
+			"initialValue": "0.125",
+			"comment": "",
+			"isStatic": false,
+			"isConstant": true,
+			"sid": 957737682271648
+		},
+		{
+			"eventType": "variable",
+			"name": "Language",
+			"type": "string",
+			"initialValue": "ru-RU",
+			"comment": "",
+			"isStatic": false,
+			"isConstant": false,
+			"sid": 974815050447415
+		},
+		{
+			"eventType": "include",
+			"includeSheet": "ES_Server"
+		},
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "every-x-seconds",
+					"objectClass": "System",
+					"sid": 632389653716918,
+					"parameters": {
+						"interval-seconds": "0.5"
+					}
+				}
+			],
+			"actions": [
+				{
+					"id": "unload-unused-images",
+					"objectClass": "System",
+					"sid": 594811449452207
+				}
+			],
+			"sid": 421941013941452
+		},
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "on-loader-layout-complete",
+					"objectClass": "System",
+					"sid": 765872661554758
+				}
+			],
+			"actions": [],
+			"sid": 281125184618675
+		},
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "on-start-of-layout",
+					"objectClass": "System",
+					"sid": 718492744098797
+				}
+			],
+			"actions": [],
+			"sid": 355363927465842,
+			"children": [
+				{
+					"eventType": "block",
+					"conditions": [
+						{
+							"id": "compare-eventvar",
+							"objectClass": "System",
+							"sid": 853522102607190,
+							"parameters": {
+								"variable": "Language",
+								"comparison": 0,
+								"value": "\"ru-RU\""
+							}
+						}
+					],
+					"actions": [
+						{
+							"id": "set-font-face",
+							"objectClass": "Texts",
+							"sid": 276440855856431,
+							"disabled": true,
+							"parameters": {
+								"font-face": "\"PressStart2P\"",
+								"style": "normal"
+							}
+						},
+						{
+							"id": "set-font-size",
+							"objectClass": "Texts",
+							"sid": 300870360706337,
+							"disabled": true,
+							"parameters": {
+								"size-pt": "Self.FaceSize / 1.5"
+							}
+						},
+						{
+							"id": "set-font-face",
+							"objectClass": "Texts",
+							"sid": 858045618297741,
+							"parameters": {
+								"font-face": "\"NotoSans\"",
+								"style": "normal"
+							}
+						},
+						{
+							"id": "set-font-size",
+							"objectClass": "Texts",
+							"sid": 662857913285342,
+							"parameters": {
+								"size-pt": "Self.FaceSize * 1.2"
+							}
+						}
+					],
+					"sid": 131176590770637
+				},
+				{
+					"eventType": "block",
+					"conditions": [
+						{
+							"id": "compare-eventvar",
+							"objectClass": "System",
+							"sid": 936757030334034,
+							"parameters": {
+								"variable": "Language",
+								"comparison": 0,
+								"value": "\"en-US\""
+							}
+						}
+					],
+					"actions": [
+						{
+							"id": "set-font-face",
+							"objectClass": "Texts",
+							"sid": 389032375231959,
+							"parameters": {
+								"font-face": "\"m6x11plus\"",
+								"style": "normal"
+							}
+						}
+					],
+					"sid": 989780847941085
+				},
+				{
+					"eventType": "block",
+					"conditions": [
+						{
+							"id": "for-each",
+							"objectClass": "System",
+							"sid": 516996587070382,
+							"parameters": {
+								"object": "Texts"
+							}
+						}
+					],
+					"actions": [
+						{
+							"id": "set-instvar-value",
+							"objectClass": "Texts",
+							"sid": 924125676208208,
+							"parameters": {
+								"instance-variable": "TextString",
+								"value": "Self.Text"
+							}
+						}
+					],
+					"sid": 243835960753177
+				},
+				{
+					"eventType": "block",
+					"conditions": [
+						{
+							"id": "for-each",
+							"objectClass": "System",
+							"sid": 785597735397896,
+							"parameters": {
+								"object": "Buttons"
+							}
+						}
+					],
+					"actions": [
+						{
+							"id": "set-instvar-value",
+							"objectClass": "Buttons",
+							"sid": 812546365282506,
+							"parameters": {
+								"instance-variable": "Width_",
+								"value": "Self.Width"
+							}
+						},
+						{
+							"id": "set-instvar-value",
+							"objectClass": "Buttons",
+							"sid": 235677003971118,
+							"parameters": {
+								"instance-variable": "Height_",
+								"value": "Self.Height"
+							}
+						}
+					],
+					"sid": 616746372970759
+				}
+			],
+			"isOrBlock": true
+		},
+		{
+			"eventType": "group",
+			"disabled": false,
+			"title": "_Cards",
+			"description": "",
+			"isActiveOnStart": true,
+			"children": [
+				{
+					"functionName": "getCardTypeIdXByName",
+					"functionDescription": "",
+					"functionCategory": "",
+					"functionReturnType": "number",
+					"functionCopyPicked": false,
+					"functionIsAsync": false,
+					"functionParameters": [
+						{
+							"name": "TypeName",
+							"type": "string",
+							"initialValue": "",
+							"comment": "",
+							"sid": 119637362131640
+						}
+					],
+					"eventType": "function-block",
+					"conditions": [],
+					"actions": [],
+					"sid": 679166763667548,
+					"children": [
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "compare-eventvar",
+									"objectClass": "System",
+									"sid": 549584526699699,
+									"parameters": {
+										"variable": "TypeName",
+										"comparison": 0,
+										"value": "\"RedShirt\""
+									}
+								}
+							],
+							"actions": [
+								{
+									"id": "set-function-return-value",
+									"objectClass": "Functions",
+									"sid": 469443533350780,
+									"parameters": {
+										"value": "0"
+									}
+								}
+							],
+							"sid": 986157356522617
+						},
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "compare-eventvar",
+									"objectClass": "System",
+									"sid": 379761890429756,
+									"parameters": {
+										"variable": "TypeName",
+										"comparison": 0,
+										"value": "\"Default\""
+									}
+								}
+							],
+							"actions": [
+								{
+									"id": "set-function-return-value",
+									"objectClass": "Functions",
+									"sid": 978690913822063,
+									"parameters": {
+										"value": "1"
+									}
+								}
+							],
+							"sid": 735659801160759
+						},
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "compare-eventvar",
+									"objectClass": "System",
+									"sid": 457084197127628,
+									"parameters": {
+										"variable": "TypeName",
+										"comparison": 0,
+										"value": "\"Gold\""
+									}
+								}
+							],
+							"actions": [
+								{
+									"id": "set-function-return-value",
+									"objectClass": "Functions",
+									"sid": 639154674147476,
+									"parameters": {
+										"value": "6"
+									}
+								}
+							],
+							"sid": 955413239873578
+						},
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "compare-eventvar",
+									"objectClass": "System",
+									"sid": 626361063919359,
+									"parameters": {
+										"variable": "TypeName",
+										"comparison": 0,
+										"value": "\"Multiplier\""
+									}
+								}
+							],
+							"actions": [
+								{
+									"id": "set-function-return-value",
+									"objectClass": "Functions",
+									"sid": 648304851205130,
+									"parameters": {
+										"value": "3"
+									}
+								}
+							],
+							"sid": 995397290931464
+						},
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "compare-eventvar",
+									"objectClass": "System",
+									"sid": 939582124706155,
+									"parameters": {
+										"variable": "TypeName",
+										"comparison": 0,
+										"value": "\"Paper\""
+									}
+								}
+							],
+							"actions": [
+								{
+									"id": "set-function-return-value",
+									"objectClass": "Functions",
+									"sid": 846554221248225,
+									"parameters": {
+										"value": "4"
+									}
+								}
+							],
+							"sid": 174379480981770
+						}
+					]
+				},
+				{
+					"functionName": "getCardTypeIdYByName",
+					"functionDescription": "",
+					"functionCategory": "",
+					"functionReturnType": "number",
+					"functionCopyPicked": false,
+					"functionIsAsync": false,
+					"functionParameters": [
+						{
+							"name": "TypeName",
+							"type": "string",
+							"initialValue": "",
+							"comment": "",
+							"sid": 815662392261124
+						}
+					],
+					"eventType": "function-block",
+					"conditions": [],
+					"actions": [],
+					"sid": 849705669793300,
+					"children": [
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "compare-eventvar",
+									"objectClass": "System",
+									"sid": 551509435046668,
+									"parameters": {
+										"variable": "TypeName",
+										"comparison": 0,
+										"value": "\"RedShirt\""
+									}
+								}
+							],
+							"actions": [
+								{
+									"id": "set-function-return-value",
+									"objectClass": "Functions",
+									"sid": 867464458823352,
+									"parameters": {
+										"value": "0"
+									}
+								}
+							],
+							"sid": 975493025117689
+						},
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "compare-eventvar",
+									"objectClass": "System",
+									"sid": 795670456928419,
+									"parameters": {
+										"variable": "TypeName",
+										"comparison": 0,
+										"value": "\"Default\""
+									}
+								}
+							],
+							"actions": [
+								{
+									"id": "set-function-return-value",
+									"objectClass": "Functions",
+									"sid": 302362567920588,
+									"parameters": {
+										"value": "0"
+									}
+								}
+							],
+							"sid": 942518795677598
+						},
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "compare-eventvar",
+									"objectClass": "System",
+									"sid": 846425286979136,
+									"parameters": {
+										"variable": "TypeName",
+										"comparison": 0,
+										"value": "\"Gold\""
+									}
+								}
+							],
+							"actions": [
+								{
+									"id": "set-function-return-value",
+									"objectClass": "Functions",
+									"sid": 451341334482635,
+									"parameters": {
+										"value": "0"
+									}
+								}
+							],
+							"sid": 938839488444958
+						},
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "compare-eventvar",
+									"objectClass": "System",
+									"sid": 256908920106246,
+									"parameters": {
+										"variable": "TypeName",
+										"comparison": 0,
+										"value": "\"Multiplier\""
+									}
+								}
+							],
+							"actions": [
+								{
+									"id": "set-function-return-value",
+									"objectClass": "Functions",
+									"sid": 160093131552385,
+									"parameters": {
+										"value": "1"
+									}
+								}
+							],
+							"sid": 342202156069186
+						},
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "compare-eventvar",
+									"objectClass": "System",
+									"sid": 158424296504705,
+									"parameters": {
+										"variable": "TypeName",
+										"comparison": 0,
+										"value": "\"Paper\""
+									}
+								}
+							],
+							"actions": [
+								{
+									"id": "set-function-return-value",
+									"objectClass": "Functions",
+									"sid": 443176101730573,
+									"parameters": {
+										"value": "1"
+									}
+								}
+							],
+							"sid": 124103648583667
+						}
+					]
+				},
+				{
+					"functionName": "getSuidIdByName",
+					"functionDescription": "",
+					"functionCategory": "",
+					"functionReturnType": "number",
+					"functionCopyPicked": false,
+					"functionIsAsync": false,
+					"functionParameters": [
+						{
+							"name": "Suit",
+							"type": "string",
+							"initialValue": "",
+							"comment": "",
+							"sid": 239932919912895
+						}
+					],
+					"eventType": "function-block",
+					"conditions": [],
+					"actions": [],
+					"sid": 746797974055571,
+					"children": [
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "compare-eventvar",
+									"objectClass": "System",
+									"sid": 176823027418361,
+									"parameters": {
+										"variable": "Suit",
+										"comparison": 0,
+										"value": "\"Hearts\""
+									}
+								}
+							],
+							"actions": [
+								{
+									"id": "set-function-return-value",
+									"objectClass": "Functions",
+									"sid": 140547505355634,
+									"parameters": {
+										"value": "0"
+									}
+								}
+							],
+							"sid": 850113344867942
+						},
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "compare-eventvar",
+									"objectClass": "System",
+									"sid": 920860729980083,
+									"parameters": {
+										"variable": "Suit",
+										"comparison": 0,
+										"value": "\"Clubs\"\n"
+									}
+								}
+							],
+							"actions": [
+								{
+									"id": "set-function-return-value",
+									"objectClass": "Functions",
+									"sid": 905066944784084,
+									"parameters": {
+										"value": "1"
+									}
+								}
+							],
+							"sid": 299285626439522
+						},
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "compare-eventvar",
+									"objectClass": "System",
+									"sid": 809296517526558,
+									"parameters": {
+										"variable": "Suit",
+										"comparison": 0,
+										"value": "\"Diamonds\"\n"
+									}
+								}
+							],
+							"actions": [
+								{
+									"id": "set-function-return-value",
+									"objectClass": "Functions",
+									"sid": 936150006068243,
+									"parameters": {
+										"value": "2"
+									}
+								}
+							],
+							"sid": 611863594608075
+						},
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "compare-eventvar",
+									"objectClass": "System",
+									"sid": 849667964623601,
+									"parameters": {
+										"variable": "Suit",
+										"comparison": 0,
+										"value": "\"Spades\"\n"
+									}
+								}
+							],
+							"actions": [
+								{
+									"id": "set-function-return-value",
+									"objectClass": "Functions",
+									"sid": 398971815645206,
+									"parameters": {
+										"value": "3"
+									}
+								}
+							],
+							"sid": 802450536967190
+						}
+					]
+				},
+				{
+					"functionName": "getCardIdByName",
+					"functionDescription": "",
+					"functionCategory": "",
+					"functionReturnType": "number",
+					"functionCopyPicked": false,
+					"functionIsAsync": false,
+					"functionParameters": [
+						{
+							"name": "CardName",
+							"type": "string",
+							"initialValue": "",
+							"comment": "",
+							"sid": 905481795575620
+						}
+					],
+					"eventType": "function-block",
+					"conditions": [],
+					"actions": [],
+					"sid": 784590933787737,
+					"children": [
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "compare-eventvar",
+									"objectClass": "System",
+									"sid": 261252834529066,
+									"parameters": {
+										"variable": "CardName",
+										"comparison": 0,
+										"value": "\"Two\""
+									}
+								}
+							],
+							"actions": [
+								{
+									"id": "set-function-return-value",
+									"objectClass": "Functions",
+									"sid": 458101617338979,
+									"parameters": {
+										"value": "0"
+									}
+								}
+							],
+							"sid": 911169900842105,
+							"disabled": true
+						},
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "compare-eventvar",
+									"objectClass": "System",
+									"sid": 117253995243074,
+									"parameters": {
+										"variable": "CardName",
+										"comparison": 0,
+										"value": "\"Three\""
+									}
+								}
+							],
+							"actions": [
+								{
+									"id": "set-function-return-value",
+									"objectClass": "Functions",
+									"sid": 880646757911895,
+									"parameters": {
+										"value": "1"
+									}
+								}
+							],
+							"sid": 715536148857426,
+							"disabled": true
+						},
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "compare-eventvar",
+									"objectClass": "System",
+									"sid": 995480935630353,
+									"parameters": {
+										"variable": "CardName",
+										"comparison": 0,
+										"value": "\"Four\""
+									}
+								}
+							],
+							"actions": [
+								{
+									"id": "set-function-return-value",
+									"objectClass": "Functions",
+									"sid": 599417591526111,
+									"parameters": {
+										"value": "2"
+									}
+								}
+							],
+							"sid": 588827772772065,
+							"disabled": true
+						},
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "compare-eventvar",
+									"objectClass": "System",
+									"sid": 270213563320147,
+									"parameters": {
+										"variable": "CardName",
+										"comparison": 0,
+										"value": "\"Five\""
+									}
+								}
+							],
+							"actions": [
+								{
+									"id": "set-function-return-value",
+									"objectClass": "Functions",
+									"sid": 943033347353834,
+									"parameters": {
+										"value": "3"
+									}
+								}
+							],
+							"sid": 860549294701563,
+							"disabled": true
+						},
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "compare-eventvar",
+									"objectClass": "System",
+									"sid": 582354372202765,
+									"parameters": {
+										"variable": "CardName",
+										"comparison": 0,
+										"value": "\"6\""
+									}
+								}
+							],
+							"actions": [
+								{
+									"id": "set-function-return-value",
+									"objectClass": "Functions",
+									"sid": 351124004443427,
+									"parameters": {
+										"value": "4"
+									}
+								}
+							],
+							"sid": 321824369740784
+						},
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "compare-eventvar",
+									"objectClass": "System",
+									"sid": 280518023903605,
+									"parameters": {
+										"variable": "CardName",
+										"comparison": 0,
+										"value": "\"7\""
+									}
+								}
+							],
+							"actions": [
+								{
+									"id": "set-function-return-value",
+									"objectClass": "Functions",
+									"sid": 230844375298002,
+									"parameters": {
+										"value": "5"
+									}
+								}
+							],
+							"sid": 140900123425571
+						},
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "compare-eventvar",
+									"objectClass": "System",
+									"sid": 946993988522218,
+									"parameters": {
+										"variable": "CardName",
+										"comparison": 0,
+										"value": "\"8\""
+									}
+								}
+							],
+							"actions": [
+								{
+									"id": "set-function-return-value",
+									"objectClass": "Functions",
+									"sid": 111695538575832,
+									"parameters": {
+										"value": "6"
+									}
+								}
+							],
+							"sid": 444448982050334
+						},
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "compare-eventvar",
+									"objectClass": "System",
+									"sid": 877460810615901,
+									"parameters": {
+										"variable": "CardName",
+										"comparison": 0,
+										"value": "\"9\""
+									}
+								}
+							],
+							"actions": [
+								{
+									"id": "set-function-return-value",
+									"objectClass": "Functions",
+									"sid": 319900267365230,
+									"parameters": {
+										"value": "7"
+									}
+								}
+							],
+							"sid": 424581376334369
+						},
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "compare-eventvar",
+									"objectClass": "System",
+									"sid": 820913976116923,
+									"parameters": {
+										"variable": "CardName",
+										"comparison": 0,
+										"value": "\"10\""
+									}
+								}
+							],
+							"actions": [
+								{
+									"id": "set-function-return-value",
+									"objectClass": "Functions",
+									"sid": 975629257350764,
+									"parameters": {
+										"value": "8"
+									}
+								}
+							],
+							"sid": 727983285419554
+						},
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "compare-eventvar",
+									"objectClass": "System",
+									"sid": 235479115408090,
+									"parameters": {
+										"variable": "CardName",
+										"comparison": 0,
+										"value": "\"Jack\""
+									}
+								}
+							],
+							"actions": [
+								{
+									"id": "set-function-return-value",
+									"objectClass": "Functions",
+									"sid": 561711301162432,
+									"parameters": {
+										"value": "9"
+									}
+								}
+							],
+							"sid": 339547195004590
+						},
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "compare-eventvar",
+									"objectClass": "System",
+									"sid": 870844921415900,
+									"parameters": {
+										"variable": "CardName",
+										"comparison": 0,
+										"value": "\"Queen\""
+									}
+								}
+							],
+							"actions": [
+								{
+									"id": "set-function-return-value",
+									"objectClass": "Functions",
+									"sid": 682506826130312,
+									"parameters": {
+										"value": "10"
+									}
+								}
+							],
+							"sid": 574286994696591
+						},
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "compare-eventvar",
+									"objectClass": "System",
+									"sid": 974202050135591,
+									"parameters": {
+										"variable": "CardName",
+										"comparison": 0,
+										"value": "\"King\""
+									}
+								}
+							],
+							"actions": [
+								{
+									"id": "set-function-return-value",
+									"objectClass": "Functions",
+									"sid": 805152004115226,
+									"parameters": {
+										"value": "11"
+									}
+								}
+							],
+							"sid": 143946572909904
+						},
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "compare-eventvar",
+									"objectClass": "System",
+									"sid": 791260964253944,
+									"parameters": {
+										"variable": "CardName",
+										"comparison": 0,
+										"value": "\"Ace\""
+									}
+								}
+							],
+							"actions": [
+								{
+									"id": "set-function-return-value",
+									"objectClass": "Functions",
+									"sid": 279948512944763,
+									"parameters": {
+										"value": "12"
+									}
+								}
+							],
+							"sid": 779659066893682
+						}
+					]
+				},
+				{
+					"functionName": "getCardPointsByValue",
+					"functionDescription": "",
+					"functionCategory": "",
+					"functionReturnType": "number",
+					"functionCopyPicked": false,
+					"functionIsAsync": false,
+					"functionParameters": [
+						{
+							"name": "Value",
+							"type": "string",
+							"initialValue": "",
+							"comment": "",
+							"sid": 317165260120835
+						}
+					],
+					"eventType": "function-block",
+					"conditions": [],
+					"actions": [],
+					"sid": 313849790122863,
+					"children": [
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "compare-eventvar",
+									"objectClass": "System",
+									"sid": 923925015146031,
+									"parameters": {
+										"variable": "Value",
+										"comparison": 0,
+										"value": "\"6\""
+									}
+								}
+							],
+							"actions": [
+								{
+									"id": "set-function-return-value",
+									"objectClass": "Functions",
+									"sid": 510025016060379,
+									"parameters": {
+										"value": "6"
+									}
+								}
+							],
+							"sid": 771175465343768
+						},
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "compare-eventvar",
+									"objectClass": "System",
+									"sid": 884536129357640,
+									"parameters": {
+										"variable": "Value",
+										"comparison": 0,
+										"value": "\"7\""
+									}
+								}
+							],
+							"actions": [
+								{
+									"id": "set-function-return-value",
+									"objectClass": "Functions",
+									"sid": 409024936076985,
+									"parameters": {
+										"value": "7"
+									}
+								}
+							],
+							"sid": 985020319144032
+						},
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "compare-eventvar",
+									"objectClass": "System",
+									"sid": 277380391531049,
+									"parameters": {
+										"variable": "Value",
+										"comparison": 0,
+										"value": "\"8\""
+									}
+								}
+							],
+							"actions": [
+								{
+									"id": "set-function-return-value",
+									"objectClass": "Functions",
+									"sid": 224946911859421,
+									"parameters": {
+										"value": "8"
+									}
+								}
+							],
+							"sid": 295752491180657
+						},
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "compare-eventvar",
+									"objectClass": "System",
+									"sid": 320665769498903,
+									"parameters": {
+										"variable": "Value",
+										"comparison": 0,
+										"value": "\"9\""
+									}
+								}
+							],
+							"actions": [
+								{
+									"id": "set-function-return-value",
+									"objectClass": "Functions",
+									"sid": 194463410690405,
+									"parameters": {
+										"value": "9"
+									}
+								}
+							],
+							"sid": 727109260830480
+						},
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "compare-eventvar",
+									"objectClass": "System",
+									"sid": 445664040980991,
+									"parameters": {
+										"variable": "Value",
+										"comparison": 0,
+										"value": "\"10\""
+									}
+								}
+							],
+							"actions": [
+								{
+									"id": "set-function-return-value",
+									"objectClass": "Functions",
+									"sid": 951912160816866,
+									"parameters": {
+										"value": "10"
+									}
+								}
+							],
+							"sid": 297389574240796
+						},
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "compare-eventvar",
+									"objectClass": "System",
+									"sid": 253889386836496,
+									"parameters": {
+										"variable": "Value",
+										"comparison": 0,
+										"value": "\"Jack\""
+									}
+								}
+							],
+							"actions": [
+								{
+									"id": "set-function-return-value",
+									"objectClass": "Functions",
+									"sid": 996832047190133,
+									"parameters": {
+										"value": "11"
+									}
+								}
+							],
+							"sid": 635496676261461
+						},
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "compare-eventvar",
+									"objectClass": "System",
+									"sid": 326435927944833,
+									"parameters": {
+										"variable": "Value",
+										"comparison": 0,
+										"value": "\"Queen\""
+									}
+								}
+							],
+							"actions": [
+								{
+									"id": "set-function-return-value",
+									"objectClass": "Functions",
+									"sid": 427913762998137,
+									"parameters": {
+										"value": "12"
+									}
+								}
+							],
+							"sid": 579793750174913
+						},
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "compare-eventvar",
+									"objectClass": "System",
+									"sid": 765297492278947,
+									"parameters": {
+										"variable": "Value",
+										"comparison": 0,
+										"value": "\"King\""
+									}
+								}
+							],
+							"actions": [
+								{
+									"id": "set-function-return-value",
+									"objectClass": "Functions",
+									"sid": 435082831118935,
+									"parameters": {
+										"value": "13"
+									}
+								}
+							],
+							"sid": 779679583681567
+						},
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "compare-eventvar",
+									"objectClass": "System",
+									"sid": 373401523903974,
+									"parameters": {
+										"variable": "Value",
+										"comparison": 0,
+										"value": "\"Ace\""
+									}
+								}
+							],
+							"actions": [
+								{
+									"id": "set-function-return-value",
+									"objectClass": "Functions",
+									"sid": 154011075200070,
+									"parameters": {
+										"value": "14"
+									}
+								}
+							],
+							"sid": 491227911557826
+						}
+					]
+				},
+				{
+					"functionName": "getCardValueName",
+					"functionDescription": "",
+					"functionCategory": "",
+					"functionReturnType": "string",
+					"functionCopyPicked": false,
+					"functionIsAsync": false,
+					"functionParameters": [
+						{
+							"name": "Value",
+							"type": "string",
+							"initialValue": "",
+							"comment": "",
+							"sid": 411201987292525
+						}
+					],
+					"eventType": "function-block",
+					"conditions": [],
+					"actions": [],
+					"sid": 137689792414849,
+					"children": [
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "compare-eventvar",
+									"objectClass": "System",
+									"sid": 385661290666035,
+									"parameters": {
+										"variable": "Value",
+										"comparison": 0,
+										"value": "\"Ace\""
+									}
+								}
+							],
+							"actions": [
+								{
+									"id": "set-function-return-value",
+									"objectClass": "Functions",
+									"sid": 170471904064112,
+									"parameters": {
+										"value": "\"Ace\""
+									}
+								}
+							],
+							"sid": 342552470152971
+						},
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "compare-eventvar",
+									"objectClass": "System",
+									"sid": 740520658734683,
+									"parameters": {
+										"variable": "Value",
+										"comparison": 0,
+										"value": "\"King\""
+									}
+								}
+							],
+							"actions": [
+								{
+									"id": "set-function-return-value",
+									"objectClass": "Functions",
+									"sid": 792478486278897,
+									"parameters": {
+										"value": "\"King\""
+									}
+								}
+							],
+							"sid": 288440891243324
+						},
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "compare-eventvar",
+									"objectClass": "System",
+									"sid": 248395183534990,
+									"parameters": {
+										"variable": "Value",
+										"comparison": 0,
+										"value": "\"Queen\""
+									}
+								}
+							],
+							"actions": [
+								{
+									"id": "set-function-return-value",
+									"objectClass": "Functions",
+									"sid": 403310563213674,
+									"parameters": {
+										"value": "\"Queen\""
+									}
+								}
+							],
+							"sid": 463217391384447
+						},
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "compare-eventvar",
+									"objectClass": "System",
+									"sid": 320334793625273,
+									"parameters": {
+										"variable": "Value",
+										"comparison": 0,
+										"value": "\"Jack\""
+									}
+								}
+							],
+							"actions": [
+								{
+									"id": "set-function-return-value",
+									"objectClass": "Functions",
+									"sid": 389273359732055,
+									"parameters": {
+										"value": "\"Jack\""
+									}
+								}
+							],
+							"sid": 613019068032398
+						},
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "compare-eventvar",
+									"objectClass": "System",
+									"sid": 563957994418510,
+									"parameters": {
+										"variable": "Value",
+										"comparison": 0,
+										"value": "\"10\""
+									}
+								}
+							],
+							"actions": [
+								{
+									"id": "set-function-return-value",
+									"objectClass": "Functions",
+									"sid": 532454329356327,
+									"parameters": {
+										"value": "\"Ten\""
+									}
+								}
+							],
+							"sid": 947450600254643
+						},
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "compare-eventvar",
+									"objectClass": "System",
+									"sid": 220781838538320,
+									"parameters": {
+										"variable": "Value",
+										"comparison": 0,
+										"value": "\"9\""
+									}
+								}
+							],
+							"actions": [
+								{
+									"id": "set-function-return-value",
+									"objectClass": "Functions",
+									"sid": 354817641578849,
+									"parameters": {
+										"value": "\"Nine\""
+									}
+								}
+							],
+							"sid": 850912146591030
+						},
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "compare-eventvar",
+									"objectClass": "System",
+									"sid": 793489418022957,
+									"parameters": {
+										"variable": "Value",
+										"comparison": 0,
+										"value": "\"8\""
+									}
+								}
+							],
+							"actions": [
+								{
+									"id": "set-function-return-value",
+									"objectClass": "Functions",
+									"sid": 515256905555029,
+									"parameters": {
+										"value": "\"Eight\""
+									}
+								}
+							],
+							"sid": 851967995914614
+						},
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "compare-eventvar",
+									"objectClass": "System",
+									"sid": 933889708477903,
+									"parameters": {
+										"variable": "Value",
+										"comparison": 0,
+										"value": "\"7\""
+									}
+								}
+							],
+							"actions": [
+								{
+									"id": "set-function-return-value",
+									"objectClass": "Functions",
+									"sid": 985901395679461,
+									"parameters": {
+										"value": "\"Seven\""
+									}
+								}
+							],
+							"sid": 756138220015175
+						},
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "compare-eventvar",
+									"objectClass": "System",
+									"sid": 494850482499973,
+									"parameters": {
+										"variable": "Value",
+										"comparison": 0,
+										"value": "\"6\""
+									}
+								}
+							],
+							"actions": [
+								{
+									"id": "set-function-return-value",
+									"objectClass": "Functions",
+									"sid": 517173765556558,
+									"parameters": {
+										"value": "\"Six\""
+									}
+								}
+							],
+							"sid": 809620320306957
+						}
+					]
+				}
+			],
+			"sid": 435978310225188
+		},
+		{
+			"eventType": "group",
+			"disabled": false,
+			"title": "Buttons",
+			"description": "",
+			"isActiveOnStart": true,
+			"children": [
+				{
+					"eventType": "group",
+					"disabled": false,
+					"title": "Buttons/Animations",
+					"description": "",
+					"isActiveOnStart": true,
+					"children": [
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "is-boolean-instance-variable-set",
+									"objectClass": "Buttons",
+									"sid": 819597244299778,
+									"parameters": {
+										"instance-variable": "Enabled"
+									}
+								}
+							],
+							"actions": [
+								{
+									"id": "set-effect-parameter",
+									"objectClass": "Buttons",
+									"sid": 918583492700691,
+									"parameters": {
+										"effect": "\"AdjustHSL\"",
+										"parameter-index": "1",
+										"value": "100"
+									}
+								}
+							],
+							"sid": 852441238254780
+						},
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "is-boolean-instance-variable-set",
+									"objectClass": "Buttons",
+									"sid": 577732390154032,
+									"parameters": {
+										"instance-variable": "Enabled"
+									},
+									"isInverted": true
+								}
+							],
+							"actions": [
+								{
+									"id": "set-effect-enabled",
+									"objectClass": "Buttons",
+									"sid": 507628962990664,
+									"parameters": {
+										"mode": "disable",
+										"effect": "\"BetterOutline\""
+									}
+								},
+								{
+									"id": "set-effect-parameter",
+									"objectClass": "Buttons",
+									"sid": 933400635167847,
+									"parameters": {
+										"effect": "\"AdjustHSL\"",
+										"parameter-index": "1",
+										"value": "0"
+									}
+								}
+							],
+							"sid": 859874849002388
+						},
+						{
+							"functionName": "enableButton",
+							"functionDescription": "",
+							"functionCategory": "",
+							"functionReturnType": "none",
+							"functionCopyPicked": false,
+							"functionIsAsync": false,
+							"functionParameters": [
+								{
+									"name": "Id",
+									"type": "number",
+									"initialValue": "0",
+									"comment": "",
+									"sid": 534131390496076
+								},
+								{
+									"name": "Name",
+									"type": "string",
+									"initialValue": "",
+									"comment": "",
+									"sid": 714933631551731
+								}
+							],
+							"eventType": "function-block",
+							"conditions": [],
+							"actions": [],
+							"sid": 865204503768825,
+							"children": [
+								{
+									"eventType": "block",
+									"conditions": [
+										{
+											"id": "pick-by-comparison",
+											"objectClass": "System",
+											"sid": 208965494724352,
+											"parameters": {
+												"object": "Buttons",
+												"expression": "Buttons.Id",
+												"comparison": 0,
+												"value": "Id"
+											}
+										},
+										{
+											"id": "pick-by-comparison",
+											"objectClass": "System",
+											"sid": 978120354736162,
+											"parameters": {
+												"object": "Buttons",
+												"expression": "Buttons.Name",
+												"comparison": 0,
+												"value": "Name"
+											}
+										}
+									],
+									"actions": [
+										{
+											"id": "set-boolean-instvar",
+											"objectClass": "Buttons",
+											"sid": 530644359543059,
+											"parameters": {
+												"instance-variable": "Enabled",
+												"value": "true"
+											}
+										}
+									],
+									"sid": 683971177369664,
+									"children": [
+										{
+											"eventType": "block",
+											"conditions": [
+												{
+													"id": "pick-children",
+													"objectClass": "Buttons",
+													"sid": 914109414784666,
+													"parameters": {
+														"child": "TButton",
+														"which": "own"
+													}
+												},
+												{
+													"id": "is-boolean-instance-variable-set",
+													"objectClass": "TButton",
+													"sid": 680954671379773,
+													"parameters": {
+														"instance-variable": "JumpingActiveWhileButtonEnabled"
+													}
+												}
+											],
+											"actions": [
+												{
+													"id": "set-boolean-instvar",
+													"objectClass": "TButton",
+													"sid": 580715890517925,
+													"parameters": {
+														"instance-variable": "Jumping",
+														"value": "true"
+													}
+												}
+											],
+											"sid": 187422353969772
+										}
+									]
+								}
+							]
+						},
+						{
+							"functionName": "disableButton",
+							"functionDescription": "",
+							"functionCategory": "",
+							"functionReturnType": "none",
+							"functionCopyPicked": false,
+							"functionIsAsync": false,
+							"functionParameters": [
+								{
+									"name": "Id",
+									"type": "number",
+									"initialValue": "0",
+									"comment": "",
+									"sid": 583892225001630
+								},
+								{
+									"name": "Name",
+									"type": "string",
+									"initialValue": "",
+									"comment": "",
+									"sid": 618546776514993
+								}
+							],
+							"eventType": "function-block",
+							"conditions": [],
+							"actions": [],
+							"sid": 232752926157730,
+							"children": [
+								{
+									"eventType": "block",
+									"conditions": [
+										{
+											"id": "pick-by-comparison",
+											"objectClass": "System",
+											"sid": 630384289866037,
+											"parameters": {
+												"object": "Buttons",
+												"expression": "Buttons.Id",
+												"comparison": 0,
+												"value": "Id"
+											}
+										},
+										{
+											"id": "pick-by-comparison",
+											"objectClass": "System",
+											"sid": 717481926225062,
+											"parameters": {
+												"object": "Buttons",
+												"expression": "Buttons.Name",
+												"comparison": 0,
+												"value": "Name"
+											}
+										}
+									],
+									"actions": [
+										{
+											"id": "set-boolean-instvar",
+											"objectClass": "Buttons",
+											"sid": 497597277122103,
+											"parameters": {
+												"instance-variable": "Enabled",
+												"value": "false"
+											}
+										}
+									],
+									"sid": 529199043577984,
+									"children": [
+										{
+											"eventType": "block",
+											"conditions": [
+												{
+													"id": "pick-children",
+													"objectClass": "Buttons",
+													"sid": 721682622702902,
+													"parameters": {
+														"child": "TButton",
+														"which": "own"
+													}
+												},
+												{
+													"id": "is-boolean-instance-variable-set",
+													"objectClass": "TButton",
+													"sid": 821095675127420,
+													"parameters": {
+														"instance-variable": "JumpingActiveWhileButtonEnabled"
+													}
+												}
+											],
+											"actions": [],
+											"sid": 644519679938609,
+											"children": [
+												{
+													"eventType": "variable",
+													"name": "Text",
+													"type": "string",
+													"initialValue": "",
+													"comment": "",
+													"isStatic": false,
+													"isConstant": false,
+													"sid": 258253155720290
+												},
+												{
+													"eventType": "block",
+													"conditions": [],
+													"actions": [
+														{
+															"id": "set-eventvar-value",
+															"objectClass": "System",
+															"sid": 578794188014648,
+															"disabled": true,
+															"parameters": {
+																"variable": "Text",
+																"value": "TButton.TextString"
+															}
+														},
+														{
+															"id": "set-boolean-instvar",
+															"objectClass": "TButton",
+															"sid": 167409063565524,
+															"parameters": {
+																"instance-variable": "Jumping",
+																"value": "false"
+															}
+														},
+														{
+															"id": "set-text",
+															"objectClass": "TButton",
+															"sid": 129616547468335,
+															"parameters": {
+																"text": "Self.TextString"
+															}
+														}
+													],
+													"sid": 299581058312690
+												}
+											]
+										}
+									]
+								}
+							]
+						},
+						{
+							"functionName": "enableClassButtons",
+							"functionDescription": "",
+							"functionCategory": "",
+							"functionReturnType": "none",
+							"functionCopyPicked": false,
+							"functionIsAsync": false,
+							"functionParameters": [
+								{
+									"name": "Class",
+									"type": "string",
+									"initialValue": "",
+									"comment": "",
+									"sid": 573920467414405
+								}
+							],
+							"eventType": "function-block",
+							"conditions": [],
+							"actions": [],
+							"sid": 879813009619050,
+							"children": [
+								{
+									"eventType": "block",
+									"conditions": [
+										{
+											"id": "pick-by-comparison",
+											"objectClass": "System",
+											"sid": 969178577331301,
+											"parameters": {
+												"object": "Buttons",
+												"expression": "Buttons.Class",
+												"comparison": 0,
+												"value": "Class"
+											}
+										}
+									],
+									"actions": [
+										{
+											"id": "set-boolean-instvar",
+											"objectClass": "Buttons",
+											"sid": 412505857778130,
+											"parameters": {
+												"instance-variable": "Enabled",
+												"value": "true"
+											}
+										}
+									],
+									"sid": 986592681649425
+								}
+							]
+						},
+						{
+							"functionName": "disableClassButtons",
+							"functionDescription": "",
+							"functionCategory": "",
+							"functionReturnType": "none",
+							"functionCopyPicked": false,
+							"functionIsAsync": false,
+							"functionParameters": [
+								{
+									"name": "Class",
+									"type": "string",
+									"initialValue": "",
+									"comment": "",
+									"sid": 619776424124558
+								}
+							],
+							"eventType": "function-block",
+							"conditions": [],
+							"actions": [],
+							"sid": 542004202281318,
+							"children": [
+								{
+									"eventType": "block",
+									"conditions": [
+										{
+											"id": "pick-by-comparison",
+											"objectClass": "System",
+											"sid": 979223680795238,
+											"parameters": {
+												"object": "Buttons",
+												"expression": "Buttons.Class",
+												"comparison": 0,
+												"value": "Class"
+											}
+										}
+									],
+									"actions": [
+										{
+											"id": "set-boolean-instvar",
+											"objectClass": "Buttons",
+											"sid": 261917012334302,
+											"parameters": {
+												"instance-variable": "Enabled",
+												"value": "false"
+											}
+										}
+									],
+									"sid": 519526629163418
+								}
+							]
+						},
+						{
+							"functionName": "unchoseAllButtons",
+							"functionDescription": "",
+							"functionCategory": "",
+							"functionReturnType": "none",
+							"functionCopyPicked": false,
+							"functionIsAsync": false,
+							"functionParameters": [
+								{
+									"name": "Class",
+									"type": "string",
+									"initialValue": "",
+									"comment": "",
+									"sid": 641574171267618
+								}
+							],
+							"eventType": "function-block",
+							"conditions": [],
+							"actions": [],
+							"sid": 754370400722776,
+							"children": [
+								{
+									"eventType": "block",
+									"conditions": [
+										{
+											"id": "pick-all",
+											"objectClass": "System",
+											"sid": 962652199542514,
+											"parameters": {
+												"object": "Buttons"
+											}
+										},
+										{
+											"id": "pick-by-comparison",
+											"objectClass": "System",
+											"sid": 893799348939908,
+											"parameters": {
+												"object": "Buttons",
+												"expression": "Buttons.Class",
+												"comparison": 0,
+												"value": "Class"
+											}
+										}
+									],
+									"actions": [
+										{
+											"id": "set-boolean-instvar",
+											"objectClass": "Buttons",
+											"sid": 216681303795095,
+											"parameters": {
+												"instance-variable": "Chosen",
+												"value": "false"
+											}
+										},
+										{
+											"id": "set-opacity",
+											"objectClass": "Buttons",
+											"sid": 972222824755644,
+											"parameters": {
+												"opacity": "100"
+											}
+										}
+									],
+									"sid": 198583000115337
+								}
+							]
+						},
+						{
+							"eventType": "comment",
+							"text": "ChosableButton"
+						},
+						{
+							"eventType": "comment",
+							"text": "ButtonAnimation"
+						},
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "on-touched-object",
+									"objectClass": "Touch",
+									"sid": 972822213040113,
+									"parameters": {
+										"object": "Buttons",
+										"type": "start"
+									}
+								},
+								{
+									"id": "is-boolean-instance-variable-set",
+									"objectClass": "Buttons",
+									"sid": 312816679161242,
+									"parameters": {
+										"instance-variable": "Enabled"
+									}
+								},
+								{
+									"id": "is-any-playing",
+									"objectClass": "Buttons",
+									"sid": 789558318484311,
+									"behaviorType": "Tween",
+									"isInverted": true
+								}
+							],
+							"actions": [],
+							"sid": 703487810509145,
+							"children": [
+								{
+									"eventType": "variable",
+									"name": "ButtonId",
+									"type": "number",
+									"initialValue": "0",
+									"comment": "",
+									"isStatic": false,
+									"isConstant": false,
+									"sid": 923930366044854
+								},
+								{
+									"eventType": "variable",
+									"name": "ButtonName",
+									"type": "string",
+									"initialValue": "",
+									"comment": "",
+									"isStatic": false,
+									"isConstant": false,
+									"sid": 316746716890623
+								},
+								{
+									"eventType": "variable",
+									"name": "ButtonClass",
+									"type": "string",
+									"initialValue": "",
+									"comment": "",
+									"isStatic": false,
+									"isConstant": false,
+									"sid": 182506856667545
+								},
+								{
+									"eventType": "block",
+									"conditions": [],
+									"actions": [
+										{
+											"id": "set-eventvar-value",
+											"objectClass": "System",
+											"sid": 706254229707519,
+											"parameters": {
+												"variable": "ButtonId",
+												"value": "Buttons.Id"
+											}
+										},
+										{
+											"id": "set-eventvar-value",
+											"objectClass": "System",
+											"sid": 147024109673825,
+											"parameters": {
+												"variable": "ButtonName",
+												"value": "Buttons.Name"
+											}
+										},
+										{
+											"id": "set-eventvar-value",
+											"objectClass": "System",
+											"sid": 370331440363147,
+											"parameters": {
+												"variable": "ButtonClass",
+												"value": "Buttons.Class"
+											}
+										},
+										{
+											"id": "tween-two-properties",
+											"objectClass": "Buttons",
+											"sid": 807920394196540,
+											"behaviorType": "Tween",
+											"parameters": {
+												"tags": "\"\"",
+												"property": "size",
+												"end-x": "Self.Width / 1.05",
+												"end-y": "Self.Height / 1.05",
+												"time": "BUTTONS_ANIMATION_TIME",
+												"ease": "easeoutexpo",
+												"destroy-on-complete": "no",
+												"loop": "no",
+												"ping-pong": "yes",
+												"repeat-count": "1"
+											}
+										}
+									],
+									"sid": 737356985858597
+								},
+								{
+									"eventType": "block",
+									"conditions": [
+										{
+											"id": "is-boolean-instance-variable-set",
+											"objectClass": "Buttons",
+											"sid": 477438801360736,
+											"parameters": {
+												"instance-variable": "Chosable"
+											}
+										}
+									],
+									"actions": [],
+									"sid": 901963869975873,
+									"children": [
+										{
+											"eventType": "block",
+											"conditions": [
+												{
+													"id": "is-boolean-instance-variable-set",
+													"objectClass": "Buttons",
+													"sid": 895118466749520,
+													"parameters": {
+														"instance-variable": "Chosen"
+													}
+												}
+											],
+											"actions": [
+												{
+													"id": "wait",
+													"objectClass": "System",
+													"sid": 769987733299571,
+													"parameters": {
+														"seconds": "0.05"
+													}
+												},
+												{
+													"callFunction": "unchoseAllButtons",
+													"sid": 474614740226299,
+													"parameters": [
+														"ButtonClass"
+													]
+												}
+											],
+											"sid": 290524678949487
+										},
+										{
+											"eventType": "block",
+											"conditions": [
+												{
+													"id": "is-boolean-instance-variable-set",
+													"objectClass": "Buttons",
+													"sid": 664069985742335,
+													"parameters": {
+														"instance-variable": "Chosen"
+													},
+													"isInverted": true
+												}
+											],
+											"actions": [
+												{
+													"id": "wait",
+													"objectClass": "System",
+													"sid": 418279979805245,
+													"parameters": {
+														"seconds": "0.05"
+													}
+												},
+												{
+													"callFunction": "unchoseAllButtons",
+													"sid": 811052556658866,
+													"parameters": [
+														"ButtonClass"
+													]
+												}
+											],
+											"sid": 673076599556966,
+											"children": [
+												{
+													"eventType": "block",
+													"conditions": [
+														{
+															"id": "pick-all",
+															"objectClass": "System",
+															"sid": 889146221711973,
+															"parameters": {
+																"object": "Buttons"
+															}
+														}
+													],
+													"actions": [],
+													"sid": 846156192268131,
+													"children": [
+														{
+															"eventType": "block",
+															"conditions": [
+																{
+																	"id": "pick-by-comparison",
+																	"objectClass": "System",
+																	"sid": 454609508276378,
+																	"parameters": {
+																		"object": "Buttons",
+																		"expression": "Buttons.Class",
+																		"comparison": 0,
+																		"value": "ButtonClass"
+																	}
+																}
+															],
+															"actions": [
+																{
+																	"id": "set-opacity",
+																	"objectClass": "Buttons",
+																	"sid": 145766530523421,
+																	"parameters": {
+																		"opacity": "50"
+																	}
+																}
+															],
+															"sid": 894184020269378
+														},
+														{
+															"eventType": "block",
+															"conditions": [
+																{
+																	"id": "pick-by-comparison",
+																	"objectClass": "System",
+																	"sid": 159059841128863,
+																	"parameters": {
+																		"object": "Buttons",
+																		"expression": "Buttons.Id",
+																		"comparison": 0,
+																		"value": "ButtonId"
+																	}
+																},
+																{
+																	"id": "pick-by-comparison",
+																	"objectClass": "System",
+																	"sid": 867724555625515,
+																	"parameters": {
+																		"object": "Buttons",
+																		"expression": "Buttons.Name",
+																		"comparison": 0,
+																		"value": "ButtonName"
+																	}
+																}
+															],
+															"actions": [
+																{
+																	"id": "set-opacity",
+																	"objectClass": "Buttons",
+																	"sid": 134781474653222,
+																	"parameters": {
+																		"opacity": "100"
+																	}
+																},
+																{
+																	"id": "set-boolean-instvar",
+																	"objectClass": "Buttons",
+																	"sid": 528616859381826,
+																	"parameters": {
+																		"instance-variable": "Chosen",
+																		"value": "true"
+																	}
+																}
+															],
+															"sid": 128148839512375
+														}
+													]
+												}
+											]
+										}
+									]
+								}
+							]
+						},
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "is-boolean-instance-variable-set",
+									"objectClass": "Buttons",
+									"sid": 556270684833550,
+									"parameters": {
+										"instance-variable": "Chosen"
+									}
+								},
+								{
+									"id": "trigger-once-while-true",
+									"objectClass": "System",
+									"sid": 879874765170777,
+									"disabled": true
+								}
+							],
+							"actions": [
+								{
+									"id": "set-effect-enabled",
+									"objectClass": "Buttons",
+									"sid": 798235397713581,
+									"parameters": {
+										"mode": "enable",
+										"effect": "\"SetColor\""
+									}
+								},
+								{
+									"id": "set-effect-parameter",
+									"objectClass": "Buttons",
+									"sid": 742684667018867,
+									"parameters": {
+										"effect": "\"SetColor\"",
+										"parameter-index": "0",
+										"value": "Functions.getColor(\"Green\")"
+									}
+								}
+							],
+							"sid": 290623241077206
+						},
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "is-boolean-instance-variable-set",
+									"objectClass": "Buttons",
+									"sid": 737636080742332,
+									"parameters": {
+										"instance-variable": "Chosen"
+									},
+									"isInverted": true
+								},
+								{
+									"id": "trigger-once-while-true",
+									"objectClass": "System",
+									"sid": 160300721900425,
+									"disabled": true
+								}
+							],
+							"actions": [
+								{
+									"id": "set-effect-enabled",
+									"objectClass": "Buttons",
+									"sid": 996842828619437,
+									"parameters": {
+										"mode": "disable",
+										"effect": "\"SetColor\""
+									}
+								}
+							],
+							"sid": 969186312719087
+						},
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "cursor-is-over-object",
+									"objectClass": "Mouse",
+									"sid": 874160685743681,
+									"parameters": {
+										"object": "Buttons"
+									}
+								},
+								{
+									"id": "is-boolean-instance-variable-set",
+									"objectClass": "Buttons",
+									"sid": 340346601028826,
+									"parameters": {
+										"instance-variable": "Enabled"
+									}
+								}
+							],
+							"actions": [
+								{
+									"id": "set-effect-enabled",
+									"objectClass": "Buttons",
+									"sid": 280220803549972,
+									"parameters": {
+										"mode": "enable",
+										"effect": "\"BetterOutline\""
+									}
+								},
+								{
+									"id": "set-effect-parameter",
+									"objectClass": "Buttons",
+									"sid": 966555032083709,
+									"parameters": {
+										"effect": "\"AdjustHSL\"",
+										"parameter-index": "2",
+										"value": "90"
+									}
+								}
+							],
+							"sid": 439716875100447
+						},
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "cursor-is-over-object",
+									"objectClass": "Mouse",
+									"sid": 488586315045294,
+									"parameters": {
+										"object": "Buttons"
+									},
+									"isInverted": true
+								}
+							],
+							"actions": [
+								{
+									"id": "set-effect-enabled",
+									"objectClass": "Buttons",
+									"sid": 278357210296905,
+									"parameters": {
+										"mode": "disable",
+										"effect": "\"BetterOutline\""
+									}
+								},
+								{
+									"id": "set-effect-parameter",
+									"objectClass": "Buttons",
+									"sid": 650577440553014,
+									"parameters": {
+										"effect": "\"AdjustHSL\"",
+										"parameter-index": "2",
+										"value": "100"
+									}
+								}
+							],
+							"sid": 110244445983835
+						}
+					],
+					"sid": 401322704945215
+				},
+				{
+					"functionName": "setButtonColor",
+					"functionDescription": "",
+					"functionCategory": "",
+					"functionReturnType": "none",
+					"functionCopyPicked": false,
+					"functionIsAsync": false,
+					"functionParameters": [
+						{
+							"name": "Id",
+							"type": "number",
+							"initialValue": "0",
+							"comment": "",
+							"sid": 284760347329981
+						},
+						{
+							"name": "Name",
+							"type": "string",
+							"initialValue": "",
+							"comment": "",
+							"sid": 386918487756042
+						},
+						{
+							"name": "ColorName",
+							"type": "string",
+							"initialValue": "",
+							"comment": "",
+							"sid": 617257774682024
+						}
+					],
+					"eventType": "function-block",
+					"conditions": [],
+					"actions": [],
+					"sid": 608434950859717,
+					"children": [
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "pick-by-comparison",
+									"objectClass": "System",
+									"sid": 949737413263700,
+									"parameters": {
+										"object": "Buttons",
+										"expression": "Buttons.Id",
+										"comparison": 0,
+										"value": "Id"
+									}
+								},
+								{
+									"id": "pick-by-comparison",
+									"objectClass": "System",
+									"sid": 254228385370862,
+									"parameters": {
+										"object": "Buttons",
+										"expression": "Buttons.Name",
+										"comparison": 0,
+										"value": "Name"
+									}
+								}
+							],
+							"actions": [
+								{
+									"id": "set-default-color",
+									"objectClass": "Buttons",
+									"sid": 721978252297099,
+									"parameters": {
+										"color": "Functions.getColor(ColorName)"
+									}
+								}
+							],
+							"sid": 627815249645442
+						}
+					]
+				},
+				{
+					"functionName": "setClassButtonsColor",
+					"functionDescription": "",
+					"functionCategory": "",
+					"functionReturnType": "none",
+					"functionCopyPicked": false,
+					"functionIsAsync": false,
+					"functionParameters": [
+						{
+							"name": "Class",
+							"type": "string",
+							"initialValue": "",
+							"comment": "",
+							"sid": 312105961412458
+						},
+						{
+							"name": "ColorName",
+							"type": "string",
+							"initialValue": "",
+							"comment": "",
+							"sid": 531332964066922
+						}
+					],
+					"eventType": "function-block",
+					"conditions": [],
+					"actions": [],
+					"sid": 118466684773037,
+					"children": [
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "pick-by-comparison",
+									"objectClass": "System",
+									"sid": 178710665961016,
+									"parameters": {
+										"object": "Buttons",
+										"expression": "Buttons.Class",
+										"comparison": 0,
+										"value": "Class"
+									}
+								}
+							],
+							"actions": [
+								{
+									"id": "set-default-color",
+									"objectClass": "Buttons",
+									"sid": 287655688770978,
+									"parameters": {
+										"color": "Functions.getColor(ColorName)"
+									}
+								}
+							],
+							"sid": 214322385624930
+						}
+					]
+				}
+			],
+			"sid": 265786284598958
+		},
+		{
+			"eventType": "group",
+			"disabled": false,
+			"title": "Colors",
+			"description": "",
+			"isActiveOnStart": true,
+			"children": [
+				{
+					"functionName": "getColor",
+					"functionDescription": "",
+					"functionCategory": "",
+					"functionReturnType": "number",
+					"functionCopyPicked": false,
+					"functionIsAsync": false,
+					"functionParameters": [
+						{
+							"name": "Name",
+							"type": "string",
+							"initialValue": "",
+							"comment": "",
+							"sid": 265800244337474
+						}
+					],
+					"eventType": "function-block",
+					"conditions": [],
+					"actions": [],
+					"sid": 887101619499285,
+					"children": [
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "compare-eventvar",
+									"objectClass": "System",
+									"sid": 978312749783006,
+									"parameters": {
+										"variable": "Name",
+										"comparison": 0,
+										"value": "\"Orange\""
+									}
+								}
+							],
+							"actions": [
+								{
+									"id": "set-function-return-value",
+									"objectClass": "Functions",
+									"sid": 784011128741540,
+									"parameters": {
+										"value": "rgb(255, 136, 0)"
+									}
+								}
+							],
+							"sid": 848240658858759
+						},
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "compare-eventvar",
+									"objectClass": "System",
+									"sid": 936475431373141,
+									"parameters": {
+										"variable": "Name",
+										"comparison": 0,
+										"value": "\"Purple\""
+									}
+								}
+							],
+							"actions": [
+								{
+									"id": "set-function-return-value",
+									"objectClass": "Functions",
+									"sid": 468750025356677,
+									"parameters": {
+										"value": "rgb(128, 0, 255)"
+									}
+								}
+							],
+							"sid": 634975808750035
+						},
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "compare-eventvar",
+									"objectClass": "System",
+									"sid": 568613165799002,
+									"parameters": {
+										"variable": "Name",
+										"comparison": 0,
+										"value": "\"Green\""
+									}
+								}
+							],
+							"actions": [
+								{
+									"id": "set-function-return-value",
+									"objectClass": "Functions",
+									"sid": 646201033232200,
+									"parameters": {
+										"value": "rgb(89, 255, 0)"
+									}
+								}
+							],
+							"sid": 470228022378156
+						},
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "compare-eventvar",
+									"objectClass": "System",
+									"sid": 882581267040963,
+									"parameters": {
+										"variable": "Name",
+										"comparison": 0,
+										"value": "\"Red\""
+									}
+								}
+							],
+							"actions": [
+								{
+									"id": "set-function-return-value",
+									"objectClass": "Functions",
+									"sid": 738247557204566,
+									"parameters": {
+										"value": "rgb(255, 0, 89)"
+									}
+								}
+							],
+							"sid": 532250385093074
+						},
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "compare-eventvar",
+									"objectClass": "System",
+									"sid": 572361265362764,
+									"parameters": {
+										"variable": "Name",
+										"comparison": 0,
+										"value": "\"White\""
+									}
+								}
+							],
+							"actions": [
+								{
+									"id": "set-function-return-value",
+									"objectClass": "Functions",
+									"sid": 250480587170535,
+									"parameters": {
+										"value": "rgb(255, 255, 255)"
+									}
+								}
+							],
+							"sid": 282117028935250
+						},
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "compare-eventvar",
+									"objectClass": "System",
+									"sid": 560197734981713,
+									"parameters": {
+										"variable": "Name",
+										"comparison": 0,
+										"value": "\"Black\""
+									}
+								}
+							],
+							"actions": [
+								{
+									"id": "set-function-return-value",
+									"objectClass": "Functions",
+									"sid": 314579657668264,
+									"parameters": {
+										"value": "rgb(20, 20, 20)"
+									}
+								}
+							],
+							"sid": 765717401450332
+						}
+					]
+				}
+			],
+			"sid": 291969999058133
+		},
+		{
+			"eventType": "group",
+			"disabled": false,
+			"title": "Text",
+			"description": "",
+			"isActiveOnStart": true,
+			"children": [
+				{
+					"eventType": "group",
+					"disabled": false,
+					"title": "Text/Animations",
+					"description": "",
+					"isActiveOnStart": true,
+					"children": [
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "every-tick",
+									"objectClass": "System",
+									"sid": 568299437121192
+								}
+							],
+							"actions": [],
+							"sid": 606540086596123,
+							"children": [
+								{
+									"eventType": "block",
+									"conditions": [
+										{
+											"id": "pick-by-comparison",
+											"objectClass": "System",
+											"sid": 582627390015546,
+											"parameters": {
+												"object": "Texts",
+												"expression": "Texts.Jumping",
+												"comparison": 0,
+												"value": "0"
+											}
+										},
+										{
+											"id": "compare-two-values",
+											"objectClass": "System",
+											"sid": 550329049371361,
+											"parameters": {
+												"first-value": "Texts.PickedCount",
+												"comparison": 4,
+												"second-value": "0"
+											}
+										}
+									],
+									"actions": [],
+									"sid": 205663403030958,
+									"children": [
+										{
+											"eventType": "block",
+											"conditions": [
+												{
+													"id": "for-each",
+													"objectClass": "System",
+													"sid": 508488772700576,
+													"parameters": {
+														"object": "Texts"
+													}
+												},
+												{
+													"id": "is-visible",
+													"objectClass": "Texts",
+													"sid": 332306171563418
+												},
+												{
+													"id": "compare-text",
+													"objectClass": "Texts",
+													"sid": 936682331133258,
+													"parameters": {
+														"text-to-compare": "Self.TextString",
+														"case-sensitivity": "case-sensitive"
+													},
+													"isInverted": true
+												}
+											],
+											"actions": [
+												{
+													"id": "set-text",
+													"objectClass": "Texts",
+													"sid": 591598795476745,
+													"parameters": {
+														"text": "Self.TextString"
+													}
+												}
+											],
+											"sid": 416897221081253
+										}
+									]
+								},
+								{
+									"eventType": "block",
+									"conditions": [
+										{
+											"id": "pick-by-comparison",
+											"objectClass": "System",
+											"sid": 945967932520440,
+											"parameters": {
+												"object": "Texts",
+												"expression": "Texts.Jumping",
+												"comparison": 0,
+												"value": "1"
+											}
+										},
+										{
+											"id": "compare-two-values",
+											"objectClass": "System",
+											"sid": 173588042195282,
+											"parameters": {
+												"first-value": "Texts.PickedCount",
+												"comparison": 4,
+												"second-value": "0"
+											}
+										}
+									],
+									"actions": [],
+									"sid": 125183276677347,
+									"children": [
+										{
+											"eventType": "block",
+											"conditions": [
+												{
+													"id": "for-each",
+													"objectClass": "System",
+													"sid": 205459829171380,
+													"parameters": {
+														"object": "Texts"
+													}
+												},
+												{
+													"id": "is-visible",
+													"objectClass": "Texts",
+													"sid": 265167195124529
+												}
+											],
+											"actions": [
+												{
+													"id": "set-text",
+													"objectClass": "Texts",
+													"sid": 239985296847729,
+													"parameters": {
+														"text": "\"\""
+													}
+												}
+											],
+											"sid": 217296632753827,
+											"children": [
+												{
+													"eventType": "block",
+													"conditions": [
+														{
+															"id": "repeat",
+															"objectClass": "System",
+															"sid": 625474546167516,
+															"parameters": {
+																"count": "len(Texts.TextString)"
+															}
+														}
+													],
+													"actions": [
+														{
+															"id": "append-text",
+															"objectClass": "Texts",
+															"sid": 241001088418414,
+															"parameters": {
+																"text": "\"[offsetY=\" & (sin(time * 300 + loopindex * 90) * 2) & \"]\" & mid(Self.TextString, loopindex, 1) & \"[/offsetY]\""
+															}
+														}
+													],
+													"sid": 243831393875005
+												}
+											]
+										}
+									]
+								}
+							]
+						}
+					],
+					"sid": 387603970515185
+				}
+			],
+			"sid": 966488652014968
+		},
+		{
+			"eventType": "group",
+			"disabled": false,
+			"title": "PreviewTest",
+			"description": "",
+			"isActiveOnStart": true,
+			"children": [
+				{
+					"eventType": "block",
+					"conditions": [
+						{
+							"id": "is-in-preview",
+							"objectClass": "System",
+							"sid": 480387860664077
+						}
+					],
+					"actions": [],
+					"sid": 101579490163902,
+					"children": [
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "on-key-pressed",
+									"objectClass": "Keyboard",
+									"sid": 495130967182810,
+									"parameters": {
+										"key": 82
+									}
+								}
+							],
+							"actions": [
+								{
+									"callFunction": "restart",
+									"sid": 798962556941157
+								}
+							],
+							"sid": 746284180149558
+						},
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "on-key-pressed",
+									"objectClass": "Keyboard",
+									"sid": 724055805274412,
+									"parameters": {
+										"key": 49
+									}
+								}
+							],
+							"actions": [],
+							"sid": 322795366277018
+						}
+					]
+				}
+			],
+			"sid": 247570147984241
+		},
+		{
+			"eventType": "block",
+			"conditions": [],
+			"actions": [],
+			"sid": 699650526438336,
+			"children": [
+				{
+					"eventType": "variable",
+					"name": "cursorX",
+					"type": "number",
+					"initialValue": "0",
+					"comment": "",
+					"isStatic": true,
+					"isConstant": false,
+					"sid": 439027261378577
+				},
+				{
+					"eventType": "variable",
+					"name": "cursorY",
+					"type": "number",
+					"initialValue": "0",
+					"comment": "",
+					"isStatic": true,
+					"isConstant": false,
+					"sid": 861946660321335
+				},
+				{
+					"eventType": "variable",
+					"name": "maxZOffset",
+					"type": "number",
+					"initialValue": "0.1",
+					"comment": "",
+					"isStatic": true,
+					"isConstant": false,
+					"sid": 982591560893409
+				},
+				{
+					"eventType": "block",
+					"conditions": [
+						{
+							"id": "cursor-is-over-object",
+							"objectClass": "Mouse",
+							"sid": 166446605537361,
+							"parameters": {
+								"object": "Card"
+							}
+						}
+					],
+					"actions": [
+						{
+							"id": "set-eventvar-value",
+							"objectClass": "System",
+							"sid": 733646615294855,
+							"parameters": {
+								"variable": "cursorX",
+								"value": "(2 * ((Mouse.X - Card.X) / Card.Width)) - 1"
+							}
+						},
+						{
+							"id": "set-eventvar-value",
+							"objectClass": "System",
+							"sid": 444228484501862,
+							"parameters": {
+								"variable": "cursorY",
+								"value": "1 - (2 * ((Mouse.Y - Card.Y) / Card.Height))"
+							}
+						},
+						{
+							"id": "set-mesh-point",
+							"objectClass": "Card",
+							"sid": 966644263182499,
+							"disabled": true,
+							"parameters": {
+								"col": "0",
+								"row": "0",
+								"mode": "absolute",
+								"posx": "0",
+								"posy": "0",
+								"z-elevation": "(-cursorX + cursorY) * maxZOffset",
+								"texx": "-1",
+								"texy": "-1"
+							}
+						},
+						{
+							"id": "set-mesh-point",
+							"objectClass": "Card",
+							"sid": 986993175602325,
+							"disabled": true,
+							"parameters": {
+								"col": "1",
+								"row": "0",
+								"mode": "absolute",
+								"posx": "0",
+								"posy": "0",
+								"z-elevation": "(cursorX + cursorY) * maxZOffset",
+								"texx": "-1",
+								"texy": "-1"
+							}
+						},
+						{
+							"id": "set-mesh-point",
+							"objectClass": "Card",
+							"sid": 118977807185880,
+							"disabled": true,
+							"parameters": {
+								"col": "0",
+								"row": "1",
+								"mode": "absolute",
+								"posx": "0",
+								"posy": "0",
+								"z-elevation": "(-cursorX - cursorY) * maxZOffset",
+								"texx": "-1",
+								"texy": "-1"
+							}
+						},
+						{
+							"id": "set-mesh-point",
+							"objectClass": "Card",
+							"sid": 126974471583409,
+							"disabled": true,
+							"parameters": {
+								"col": "1",
+								"row": "1",
+								"mode": "absolute",
+								"posx": "0",
+								"posy": "0",
+								"z-elevation": "(cursorX - cursorY) * maxZOffset",
+								"texx": "-1",
+								"texy": "-1"
+							}
+						},
+						{
+							"id": "log",
+							"objectClass": "Browser",
+							"sid": 186709498516977,
+							"parameters": {
+								"type": "log",
+								"message": "cursorX&\", \"&cursorY"
+							}
+						}
+					],
+					"sid": 307330193571289
+				},
+				{
+					"eventType": "block",
+					"conditions": [
+						{
+							"id": "cursor-is-over-object",
+							"objectClass": "Mouse",
+							"sid": 557707272359312,
+							"parameters": {
+								"object": "Card"
+							},
+							"isInverted": true
+						}
+					],
+					"actions": [
+						{
+							"id": "set-mesh-point",
+							"objectClass": "Card",
+							"sid": 538890188353069,
+							"disabled": true,
+							"parameters": {
+								"col": "0",
+								"row": "0",
+								"mode": "absolute",
+								"posx": "0",
+								"posy": "0",
+								"z-elevation": "0",
+								"texx": "-1",
+								"texy": "-1"
+							}
+						},
+						{
+							"id": "set-mesh-point",
+							"objectClass": "Card",
+							"sid": 771494293621943,
+							"disabled": true,
+							"parameters": {
+								"col": "1",
+								"row": "0",
+								"mode": "absolute",
+								"posx": "0",
+								"posy": "0",
+								"z-elevation": "0",
+								"texx": "-1",
+								"texy": "-1"
+							}
+						},
+						{
+							"id": "set-mesh-point",
+							"objectClass": "Card",
+							"sid": 482595269234432,
+							"disabled": true,
+							"parameters": {
+								"col": "0",
+								"row": "1",
+								"mode": "absolute",
+								"posx": "0",
+								"posy": "0",
+								"z-elevation": "0",
+								"texx": "-1",
+								"texy": "-1"
+							}
+						},
+						{
+							"id": "set-mesh-point",
+							"objectClass": "Card",
+							"sid": 677712986569169,
+							"disabled": true,
+							"parameters": {
+								"col": "1",
+								"row": "1",
+								"mode": "absolute",
+								"posx": "0",
+								"posy": "0",
+								"z-elevation": "0",
+								"texx": "-1",
+								"texy": "-1"
+							}
+						}
+					],
+					"sid": 864804674681184
+				}
+			]
+		}
+	],
+	"sid": 287254174806437
+}

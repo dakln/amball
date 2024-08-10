@@ -1,0 +1,41 @@
+{
+	"name": "Card_",
+	"plugin-id": "TiledBg",
+	"sid": 237169991408702,
+	"instanceVariables": [
+		{
+			"name": "Scale",
+			"type": "number",
+			"desc": "",
+			"show": false,
+			"sid": 463065277817634
+		},
+		{
+			"name": "OffsetX",
+			"type": "number",
+			"desc": "",
+			"show": true,
+			"sid": 270055698318299
+		},
+		{
+			"name": "OffsetY",
+			"type": "number",
+			"desc": "",
+			"show": true,
+			"sid": 706633297412278
+		}
+	],
+	"behaviorTypes": [
+		{
+			"behaviorId": "Tween",
+			"name": "Tween",
+			"sid": 625618243930336
+		}
+	],
+	"effectTypes": [],
+	"members": [
+		"obj_CardSkin",
+		"obj_Card",
+		"obj_Joker"
+	]
+}

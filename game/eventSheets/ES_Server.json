@@ -1,0 +1,1105 @@
+{
+	"name": "ES_Server",
+	"events": [
+		{
+			"eventType": "variable",
+			"name": "EnemySessionId",
+			"type": "string",
+			"initialValue": "",
+			"comment": "",
+			"isStatic": false,
+			"isConstant": false,
+			"sid": 130627250202082
+		},
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "on-start-of-layout",
+					"objectClass": "System",
+					"sid": 778819991521941
+				}
+			],
+			"actions": [
+				{
+					"id": "set-endpoint",
+					"objectClass": "Server",
+					"sid": 992141923497957,
+					"disabled": true,
+					"parameters": {
+						"endpoint": "\"http://192.168.0.105:2567\""
+					}
+				}
+			],
+			"sid": 790988283053438
+		},
+		{
+			"functionName": "getCurrentFakeCardValue",
+			"functionDescription": "",
+			"functionCategory": "",
+			"functionReturnType": "string",
+			"functionCopyPicked": false,
+			"functionIsAsync": false,
+			"functionParameters": [],
+			"eventType": "function-block",
+			"conditions": [],
+			"actions": [],
+			"sid": 119448682976254,
+			"children": [
+				{
+					"eventType": "variable",
+					"name": "FakeCardValue",
+					"type": "string",
+					"initialValue": "",
+					"comment": "",
+					"isStatic": false,
+					"isConstant": false,
+					"sid": 983633919738228
+				},
+				{
+					"eventType": "block",
+					"conditions": [],
+					"actions": [
+						{
+							"id": "set-eventvar-value",
+							"objectClass": "System",
+							"sid": 470628182777458,
+							"parameters": {
+								"variable": "FakeCardValue",
+								"value": "Server.State(\"table.fakeCardValue\")"
+							}
+						},
+						{
+							"id": "set-function-return-value",
+							"objectClass": "Functions",
+							"sid": 638798942619527,
+							"parameters": {
+								"value": "FakeCardValue"
+							}
+						}
+					],
+					"sid": 850072407711024
+				}
+			]
+		},
+		{
+			"functionName": "checkIsMyTurn",
+			"functionDescription": "",
+			"functionCategory": "",
+			"functionReturnType": "number",
+			"functionCopyPicked": false,
+			"functionIsAsync": false,
+			"functionParameters": [],
+			"eventType": "function-block",
+			"conditions": [],
+			"actions": [],
+			"sid": 966494802950079,
+			"children": [
+				{
+					"eventType": "block",
+					"conditions": [
+						{
+							"id": "compare-two-values",
+							"objectClass": "System",
+							"sid": 447724190524779,
+							"parameters": {
+								"first-value": "Server.State(\"currentTurnBy\")",
+								"comparison": 1,
+								"second-value": "Server.SessionId"
+							}
+						}
+					],
+					"actions": [
+						{
+							"id": "set-function-return-value",
+							"objectClass": "Functions",
+							"sid": 248712799428478,
+							"parameters": {
+								"value": "0"
+							}
+						}
+					],
+					"sid": 462962857231220
+				},
+				{
+					"eventType": "block",
+					"conditions": [
+						{
+							"id": "compare-two-values",
+							"objectClass": "System",
+							"sid": 328253861434363,
+							"parameters": {
+								"first-value": "Server.State(\"currentTurnBy\")",
+								"comparison": 0,
+								"second-value": "Server.SessionId"
+							}
+						}
+					],
+					"actions": [
+						{
+							"id": "set-function-return-value",
+							"objectClass": "Functions",
+							"sid": 563909854241722,
+							"parameters": {
+								"value": "1"
+							}
+						}
+					],
+					"sid": 316082722262321
+				}
+			]
+		},
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "on-room-message",
+					"objectClass": "Server",
+					"sid": 554280890986226,
+					"parameters": {
+						"type": "\"shuffleEnemyCards\""
+					}
+				}
+			],
+			"actions": [
+				{
+					"callFunction": "shuffleEnemyCards",
+					"sid": 462797740625182,
+					"parameters": [
+						"Server.MessageValue"
+					]
+				}
+			],
+			"sid": 253777830473334
+		},
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "on-room-message",
+					"objectClass": "Server",
+					"sid": 948699613551622,
+					"parameters": {
+						"type": "\"checkCard\""
+					}
+				}
+			],
+			"actions": [],
+			"sid": 808542623185918,
+			"children": [
+				{
+					"eventType": "variable",
+					"name": "Card",
+					"type": "string",
+					"initialValue": "",
+					"comment": "",
+					"isStatic": false,
+					"isConstant": false,
+					"sid": 267807260534168
+				},
+				{
+					"eventType": "variable",
+					"name": "Id",
+					"type": "number",
+					"initialValue": "0",
+					"comment": "",
+					"isStatic": false,
+					"isConstant": false,
+					"sid": 142535188591851
+				},
+				{
+					"eventType": "variable",
+					"name": "Name",
+					"type": "string",
+					"initialValue": "",
+					"comment": "",
+					"isStatic": false,
+					"isConstant": false,
+					"sid": 633004910399610
+				},
+				{
+					"eventType": "block",
+					"conditions": [],
+					"actions": [
+						{
+							"id": "set-eventvar-value",
+							"objectClass": "System",
+							"sid": 295431044090979,
+							"parameters": {
+								"variable": "Card",
+								"value": "Server.MessageValue"
+							}
+						},
+						{
+							"type": "script",
+							"script": "const card = JSON.parse(localVars.Card);\nlocalVars.Id = card.id;\nlocalVars.Name = card.name;"
+						},
+						{
+							"callFunction": "checkCard",
+							"sid": 283539401343439,
+							"parameters": [
+								"Id",
+								"Name"
+							]
+						}
+					],
+					"sid": 742031115040215
+				}
+			]
+		},
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "on-room-message",
+					"objectClass": "Server",
+					"sid": 252789173471866,
+					"parameters": {
+						"type": "\"dropCard\""
+					}
+				}
+			],
+			"actions": [],
+			"sid": 612477905200382,
+			"children": [
+				{
+					"eventType": "variable",
+					"name": "Card",
+					"type": "string",
+					"initialValue": "",
+					"comment": "",
+					"isStatic": false,
+					"isConstant": false,
+					"sid": 906964032953536
+				},
+				{
+					"eventType": "variable",
+					"name": "Id",
+					"type": "number",
+					"initialValue": "0",
+					"comment": "",
+					"isStatic": false,
+					"isConstant": false,
+					"sid": 910855628554291
+				},
+				{
+					"eventType": "variable",
+					"name": "Name",
+					"type": "string",
+					"initialValue": "",
+					"comment": "",
+					"isStatic": false,
+					"isConstant": false,
+					"sid": 914970466100018
+				},
+				{
+					"eventType": "block",
+					"conditions": [],
+					"actions": [
+						{
+							"id": "set-eventvar-value",
+							"objectClass": "System",
+							"sid": 787348820937906,
+							"parameters": {
+								"variable": "Card",
+								"value": "Server.MessageValue"
+							}
+						},
+						{
+							"type": "script",
+							"script": "const card = JSON.parse(localVars.Card);\nlocalVars.Id = card.id;\nlocalVars.Name = card.name;"
+						},
+						{
+							"callFunction": "dropCard",
+							"sid": 202529333831970,
+							"parameters": [
+								"Id",
+								"Name"
+							]
+						}
+					],
+					"sid": 165722522202338
+				}
+			]
+		},
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "on-room-message",
+					"objectClass": "Server",
+					"sid": 789480728247419,
+					"parameters": {
+						"type": "\"nextRound\""
+					}
+				}
+			],
+			"actions": [
+				{
+					"id": "set-boolean-eventvar",
+					"objectClass": "System",
+					"sid": 675602298003421,
+					"parameters": {
+						"variable": "PlayingCards",
+						"value": "false"
+					}
+				},
+				{
+					"id": "set-boolean-eventvar",
+					"objectClass": "System",
+					"sid": 507152128615899,
+					"parameters": {
+						"variable": "CheckingTable",
+						"value": "false"
+					}
+				}
+			],
+			"sid": 987795616197525,
+			"children": [
+				{
+					"eventType": "block",
+					"conditions": [],
+					"actions": [
+						{
+							"id": "set-instvar-value",
+							"objectClass": "TCurrentTableCardsCount",
+							"sid": 955007940117639,
+							"parameters": {
+								"instance-variable": "TextString",
+								"value": "\"\""
+							}
+						}
+					],
+					"sid": 215775360154008,
+					"disabled": true
+				}
+			]
+		},
+		{
+			"functionName": "updatePlayersList",
+			"functionDescription": "",
+			"functionCategory": "",
+			"functionReturnType": "none",
+			"functionCopyPicked": false,
+			"functionIsAsync": false,
+			"functionParameters": [],
+			"eventType": "function-block",
+			"conditions": [],
+			"actions": [
+				{
+					"id": "clear",
+					"objectClass": "DEnemySessionIds",
+					"sid": 282473466436859
+				}
+			],
+			"sid": 250129228948749,
+			"children": [
+				{
+					"eventType": "variable",
+					"name": "ClientPlayerNumber",
+					"type": "number",
+					"initialValue": "0",
+					"comment": "",
+					"isStatic": false,
+					"isConstant": false,
+					"sid": 480929081061999
+				},
+				{
+					"eventType": "variable",
+					"name": "PlayersCount",
+					"type": "number",
+					"initialValue": "0",
+					"comment": "",
+					"isStatic": false,
+					"isConstant": false,
+					"sid": 727126098288863
+				},
+				{
+					"eventType": "block",
+					"conditions": [],
+					"actions": [
+						{
+							"id": "set-eventvar-value",
+							"objectClass": "System",
+							"sid": 165728488158153,
+							"parameters": {
+								"variable": "ClientPlayerNumber",
+								"value": "Server.State(\"players.\"&Server.SessionId&\".playerNumber\")"
+							}
+						},
+						{
+							"id": "set-eventvar-value",
+							"objectClass": "System",
+							"sid": 707487214338964,
+							"parameters": {
+								"variable": "PlayersCount",
+								"value": "Server.CountItemsAt(\"players\")"
+							}
+						}
+					],
+					"sid": 828304591981233,
+					"children": [
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "pick-all",
+									"objectClass": "System",
+									"sid": 999280588327666,
+									"parameters": {
+										"object": "obj_EnemyCardsPatch"
+									}
+								}
+							],
+							"actions": [
+								{
+									"id": "set-instvar-value",
+									"objectClass": "obj_EnemyCardsPatch",
+									"sid": 390034628180198,
+									"parameters": {
+										"instance-variable": "SessionId",
+										"value": "\"\""
+									}
+								},
+								{
+									"id": "set-boolean-instvar",
+									"objectClass": "obj_EnemyCardsPatch",
+									"sid": 356702655367648,
+									"parameters": {
+										"instance-variable": "Busy",
+										"value": "false"
+									}
+								}
+							],
+							"sid": 932132948400541,
+							"children": [
+								{
+									"eventType": "block",
+									"conditions": [
+										{
+											"id": "pick-children",
+											"objectClass": "obj_EnemyCardsPatch",
+											"sid": 324729222434252,
+											"parameters": {
+												"child": "Texts",
+												"which": "own"
+											}
+										}
+									],
+									"actions": [
+										{
+											"id": "set-instvar-value",
+											"objectClass": "Texts",
+											"sid": 557296554888623,
+											"parameters": {
+												"instance-variable": "TextString",
+												"value": "\"\""
+											}
+										}
+									],
+									"sid": 792873981895900
+								}
+							]
+						}
+					]
+				},
+				{
+					"eventType": "block",
+					"conditions": [
+						{
+							"id": "state-items-foreach",
+							"objectClass": "Server",
+							"sid": 414574678596971,
+							"parameters": {
+								"path": "\"players\""
+							}
+						}
+					],
+					"actions": [],
+					"sid": 723790173285358,
+					"children": [
+						{
+							"eventType": "variable",
+							"name": "SessionId",
+							"type": "string",
+							"initialValue": "",
+							"comment": "",
+							"isStatic": false,
+							"isConstant": false,
+							"sid": 760380974356796
+						},
+						{
+							"eventType": "variable",
+							"name": "Data",
+							"type": "string",
+							"initialValue": "",
+							"comment": "",
+							"isStatic": false,
+							"isConstant": false,
+							"sid": 974675857934793
+						},
+						{
+							"eventType": "variable",
+							"name": "LocalPlayerNumber",
+							"type": "number",
+							"initialValue": "0",
+							"comment": "",
+							"isStatic": false,
+							"isConstant": false,
+							"sid": 925419778184411
+						},
+						{
+							"eventType": "block",
+							"conditions": [],
+							"actions": [
+								{
+									"id": "set-eventvar-value",
+									"objectClass": "System",
+									"sid": 857470496963630,
+									"parameters": {
+										"variable": "SessionId",
+										"value": "Server.CurrentKey"
+									}
+								},
+								{
+									"id": "set-eventvar-value",
+									"objectClass": "System",
+									"sid": 889533496884364,
+									"parameters": {
+										"variable": "Data",
+										"value": "Server.CurrentValue"
+									}
+								}
+							],
+							"sid": 710538651965264,
+							"children": [
+								{
+									"eventType": "block",
+									"conditions": [],
+									"actions": [
+										{
+											"type": "script",
+											"script": "const playerData = JSON.parse(localVars.Data);\n//console.log(playerData);\nlet offset = localVars.ClientPlayerNumber - 1;\nlet localNumber = (playerData.playerNumber - offset);\nif (localNumber <= 0) {\n\tlocalNumber += localVars.PlayersCount; // где playerData.length - текущее кол.во игроков (макс - 4)\n}\nlocalVars.LocalPlayerNumber = localNumber;\n//console.log(`Player with Number ${playerData.playerNumber}`, `for you is: ${localNumber}`);"
+										}
+									],
+									"sid": 456626556427419,
+									"children": [
+										{
+											"eventType": "block",
+											"conditions": [
+												{
+													"id": "pick-by-comparison",
+													"objectClass": "System",
+													"sid": 366996159856819,
+													"parameters": {
+														"object": "obj_EnemyCardsPatch",
+														"expression": "obj_EnemyCardsPatch.PlayerNumber",
+														"comparison": 0,
+														"value": "LocalPlayerNumber"
+													}
+												}
+											],
+											"actions": [
+												{
+													"id": "add-key",
+													"objectClass": "DEnemySessionIds",
+													"sid": 152643568782037,
+													"parameters": {
+														"key": "str(LocalPlayerNumber)",
+														"value": "SessionId"
+													}
+												},
+												{
+													"id": "set-instvar-value",
+													"objectClass": "obj_EnemyCardsPatch",
+													"sid": 811991060099729,
+													"parameters": {
+														"instance-variable": "SessionId",
+														"value": "SessionId"
+													}
+												},
+												{
+													"id": "set-boolean-instvar",
+													"objectClass": "obj_EnemyCardsPatch",
+													"sid": 187709569509415,
+													"parameters": {
+														"instance-variable": "Busy",
+														"value": "true"
+													}
+												}
+											],
+											"sid": 228101544175913,
+											"children": [
+												{
+													"eventType": "block",
+													"conditions": [
+														{
+															"id": "pick-children",
+															"objectClass": "obj_EnemyCardsPatch",
+															"sid": 500228765821126,
+															"parameters": {
+																"child": "Texts",
+																"which": "own"
+															}
+														}
+													],
+													"actions": [],
+													"sid": 709606987164344,
+													"children": [
+														{
+															"eventType": "block",
+															"conditions": [
+																{
+																	"id": "compare-instance-variable",
+																	"objectClass": "Texts",
+																	"sid": 507754167750863,
+																	"parameters": {
+																		"instance-variable": "Name",
+																		"comparison": 0,
+																		"value": "\"username\""
+																	}
+																}
+															],
+															"actions": [
+																{
+																	"id": "set-instvar-value",
+																	"objectClass": "Texts",
+																	"sid": 278541108650201,
+																	"parameters": {
+																		"instance-variable": "TextString",
+																		"value": "Server.State(\"players.\"&SessionId&\".username\")"
+																	}
+																}
+															],
+															"sid": 923253406677572
+														}
+													]
+												}
+											]
+										}
+									]
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "state-collection-item-remove",
+					"objectClass": "Server",
+					"sid": 789725173168184,
+					"parameters": {
+						"path": "\"players\""
+					}
+				},
+				{
+					"id": "state-collection-item-add",
+					"objectClass": "Server",
+					"sid": 523263426399325,
+					"parameters": {
+						"path": "\"players\""
+					}
+				}
+			],
+			"actions": [
+				{
+					"callFunction": "updatePlayersList",
+					"sid": 628531954490858
+				}
+			],
+			"sid": 925175979913508,
+			"isOrBlock": true
+		},
+		{
+			"functionName": "checkIsResetingRound",
+			"functionDescription": "",
+			"functionCategory": "",
+			"functionReturnType": "number",
+			"functionCopyPicked": false,
+			"functionIsAsync": false,
+			"functionParameters": [],
+			"eventType": "function-block",
+			"conditions": [],
+			"actions": [
+				{
+					"id": "set-function-return-value",
+					"objectClass": "Functions",
+					"sid": 886612613664370,
+					"parameters": {
+						"value": "Server.State(\"isResetingRound\")"
+					}
+				}
+			],
+			"sid": 315776507957660
+		},
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "on-room-message",
+					"objectClass": "Server",
+					"sid": 562284327259628,
+					"parameters": {
+						"type": "\"newTurnAvailable\""
+					}
+				}
+			],
+			"actions": [],
+			"sid": 345434965015202,
+			"children": [
+				{
+					"eventType": "variable",
+					"name": "SessionId",
+					"type": "string",
+					"initialValue": "",
+					"comment": "",
+					"isStatic": false,
+					"isConstant": false,
+					"sid": 626452337284956
+				},
+				{
+					"eventType": "block",
+					"conditions": [],
+					"actions": [
+						{
+							"id": "set-eventvar-value",
+							"objectClass": "System",
+							"sid": 982338805736331,
+							"parameters": {
+								"variable": "SessionId",
+								"value": "Server.MessageValue"
+							}
+						}
+					],
+					"sid": 928095357446066,
+					"children": [
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "pick-all",
+									"objectClass": "System",
+									"sid": 352622365481093,
+									"parameters": {
+										"object": "obj_EnemyCardsPatch"
+									}
+								}
+							],
+							"actions": [],
+							"sid": 686283996695692,
+							"children": [
+								{
+									"eventType": "block",
+									"conditions": [
+										{
+											"id": "pick-children",
+											"objectClass": "obj_EnemyCardsPatch",
+											"sid": 201688784981071,
+											"parameters": {
+												"child": "Texts",
+												"which": "own"
+											}
+										}
+									],
+									"actions": [],
+									"sid": 765719436761102,
+									"children": [
+										{
+											"eventType": "block",
+											"conditions": [
+												{
+													"id": "compare-instance-variable",
+													"objectClass": "Texts",
+													"sid": 107792521001169,
+													"parameters": {
+														"instance-variable": "Name",
+														"comparison": 0,
+														"value": "\"username\""
+													}
+												}
+											],
+											"actions": [
+												{
+													"id": "set-boolean-instvar",
+													"objectClass": "Texts",
+													"sid": 462435434023367,
+													"parameters": {
+														"instance-variable": "Jumping",
+														"value": "false"
+													}
+												},
+												{
+													"id": "set-font-color",
+													"objectClass": "Texts",
+													"sid": 543364618817955,
+													"parameters": {
+														"color": "Functions.getColor(\"Black\")"
+													}
+												}
+											],
+											"sid": 595196862257533
+										}
+									]
+								}
+							]
+						},
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "compare-eventvar",
+									"objectClass": "System",
+									"sid": 804463633017899,
+									"parameters": {
+										"variable": "SessionId",
+										"comparison": 1,
+										"value": "\"\""
+									}
+								}
+							],
+							"actions": [],
+							"sid": 855180475936492,
+							"children": [
+								{
+									"eventType": "block",
+									"conditions": [
+										{
+											"id": "compare-eventvar",
+											"objectClass": "System",
+											"sid": 733910255245725,
+											"parameters": {
+												"variable": "SessionId",
+												"comparison": 0,
+												"value": "Server.SessionId"
+											}
+										}
+									],
+									"actions": [
+										{
+											"callFunction": "showPlayingPanel",
+											"sid": 977049532234792
+										}
+									],
+									"sid": 193330208373157
+								},
+								{
+									"eventType": "block",
+									"conditions": [
+										{
+											"id": "compare-eventvar",
+											"objectClass": "System",
+											"sid": 224147140333687,
+											"parameters": {
+												"variable": "SessionId",
+												"comparison": 1,
+												"value": "Server.SessionId"
+											}
+										}
+									],
+									"actions": [
+										{
+											"callFunction": "hidePlayingPanel",
+											"sid": 501550191884927
+										}
+									],
+									"sid": 581604998700440,
+									"children": [
+										{
+											"eventType": "block",
+											"conditions": [
+												{
+													"id": "pick-by-comparison",
+													"objectClass": "System",
+													"sid": 468966444709165,
+													"parameters": {
+														"object": "obj_EnemyCardsPatch",
+														"expression": "obj_EnemyCardsPatch.SessionId",
+														"comparison": 0,
+														"value": "SessionId"
+													}
+												}
+											],
+											"actions": [],
+											"sid": 690002490441211,
+											"children": [
+												{
+													"eventType": "block",
+													"conditions": [
+														{
+															"id": "pick-children",
+															"objectClass": "obj_EnemyCardsPatch",
+															"sid": 140240423142905,
+															"parameters": {
+																"child": "Texts",
+																"which": "own"
+															}
+														}
+													],
+													"actions": [],
+													"sid": 889545832734857,
+													"children": [
+														{
+															"eventType": "block",
+															"conditions": [
+																{
+																	"id": "compare-instance-variable",
+																	"objectClass": "Texts",
+																	"sid": 335726899607681,
+																	"parameters": {
+																		"instance-variable": "Name",
+																		"comparison": 0,
+																		"value": "\"username\""
+																	}
+																}
+															],
+															"actions": [
+																{
+																	"id": "set-boolean-instvar",
+																	"objectClass": "Texts",
+																	"sid": 176400380971381,
+																	"parameters": {
+																		"instance-variable": "Jumping",
+																		"value": "true"
+																	}
+																},
+																{
+																	"id": "set-font-color",
+																	"objectClass": "Texts",
+																	"sid": 939704995133507,
+																	"parameters": {
+																		"color": "Functions.getColor(\"Red\")"
+																	}
+																}
+															],
+															"sid": 283212853788323
+														}
+													]
+												}
+											]
+										}
+									]
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "on-key-pressed",
+					"objectClass": "Keyboard",
+					"sid": 763901235108082,
+					"parameters": {
+						"key": 53
+					}
+				}
+			],
+			"actions": [
+				{
+					"callFunction": "useJoker",
+					"sid": 997506680871784,
+					"parameters": [
+						"0",
+						"\"Textiler\"",
+						false,
+						"\"\""
+					]
+				}
+			],
+			"sid": 332325032457309
+		},
+		{
+			"functionName": "useJoker",
+			"functionDescription": "",
+			"functionCategory": "",
+			"functionReturnType": "none",
+			"functionCopyPicked": false,
+			"functionIsAsync": false,
+			"functionParameters": [
+				{
+					"name": "Id",
+					"type": "number",
+					"initialValue": "0",
+					"comment": "",
+					"sid": 985640857660539
+				},
+				{
+					"name": "Name",
+					"type": "string",
+					"initialValue": "",
+					"comment": "",
+					"sid": 979666563125687
+				},
+				{
+					"name": "CustomData",
+					"type": "boolean",
+					"initialValue": "false",
+					"comment": "",
+					"sid": 362956734668752
+				},
+				{
+					"name": "Data",
+					"type": "string",
+					"initialValue": "",
+					"comment": "",
+					"sid": 195119668538529
+				}
+			],
+			"eventType": "function-block",
+			"conditions": [],
+			"actions": [],
+			"sid": 432613024767583,
+			"children": [
+				{
+					"eventType": "block",
+					"conditions": [
+						{
+							"id": "compare-boolean-eventvar",
+							"objectClass": "System",
+							"sid": 216626373030717,
+							"parameters": {
+								"variable": "CustomData"
+							},
+							"isInverted": true
+						}
+					],
+					"actions": [
+						{
+							"id": "room-send-json",
+							"objectClass": "Server",
+							"sid": 614199085131204,
+							"parameters": {
+								"type": "\"useJoker\"",
+								"message": "Server.JSON(\"{\r\nid: \"&Id&\",\r\nname: '\"&Name&\"'\r\n}\")"
+							}
+						}
+					],
+					"sid": 801012528950939
+				},
+				{
+					"eventType": "block",
+					"conditions": [
+						{
+							"id": "compare-boolean-eventvar",
+							"objectClass": "System",
+							"sid": 970032328560715,
+							"parameters": {
+								"variable": "CustomData"
+							}
+						}
+					],
+					"actions": [],
+					"sid": 438400851367104
+				}
+			]
+		}
+	],
+	"sid": 881788650099059
+}

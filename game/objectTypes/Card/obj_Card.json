@@ -1,0 +1,181 @@
+{
+	"name": "obj_Card",
+	"plugin-id": "TiledBg",
+	"sid": 141396613909571,
+	"isGlobal": false,
+	"instanceVariables": [
+		{
+			"name": "OutlineWidth",
+			"type": "number",
+			"desc": "",
+			"show": false,
+			"sid": 184829710646055
+		},
+		{
+			"name": "HandPosition",
+			"type": "number",
+			"desc": "",
+			"show": true,
+			"sid": 339291159573140
+		},
+		{
+			"name": "StartY",
+			"type": "number",
+			"desc": "",
+			"show": true,
+			"sid": 825846997492124
+		},
+		{
+			"name": "TargetX",
+			"type": "number",
+			"desc": "",
+			"show": true,
+			"sid": 855951931824511
+		},
+		{
+			"name": "TargetY",
+			"type": "number",
+			"desc": "",
+			"show": true,
+			"sid": 705893139716367
+		},
+		{
+			"name": "SessionId",
+			"type": "string",
+			"desc": "",
+			"show": true,
+			"sid": 280233185671434
+		},
+		{
+			"name": "Hidden",
+			"type": "boolean",
+			"desc": "",
+			"show": true,
+			"sid": 306496362012116
+		},
+		{
+			"name": "Id",
+			"type": "number",
+			"desc": "",
+			"show": true,
+			"sid": 933819324679003
+		},
+		{
+			"name": "Name",
+			"type": "string",
+			"desc": "",
+			"show": true,
+			"sid": 825905590703140
+		},
+		{
+			"name": "Value",
+			"type": "string",
+			"desc": "",
+			"show": true,
+			"sid": 934025581705876
+		},
+		{
+			"name": "Suit",
+			"type": "string",
+			"desc": "",
+			"show": true,
+			"sid": 325090471392994
+		},
+		{
+			"name": "Type",
+			"type": "string",
+			"desc": "",
+			"show": true,
+			"sid": 524790347554207
+		},
+		{
+			"name": "Selected",
+			"type": "boolean",
+			"desc": "",
+			"show": true,
+			"sid": 880899293530282
+		},
+		{
+			"name": "OnTable",
+			"type": "boolean",
+			"desc": "",
+			"show": true,
+			"sid": 428127374807389
+		},
+		{
+			"name": "OnCheckingTable",
+			"type": "boolean",
+			"desc": "",
+			"show": true,
+			"sid": 974441495884001
+		},
+		{
+			"name": "CheckingId_",
+			"type": "number",
+			"desc": "",
+			"show": true,
+			"sid": 165148765880856
+		},
+		{
+			"name": "Stacked",
+			"type": "boolean",
+			"desc": "",
+			"show": true,
+			"sid": 855995904705268
+		},
+		{
+			"name": "InDeck",
+			"type": "boolean",
+			"desc": "",
+			"show": true,
+			"sid": 510825041694995
+		},
+		{
+			"name": "Moving",
+			"type": "boolean",
+			"desc": "",
+			"show": true,
+			"sid": 961167932664403
+		},
+		{
+			"name": "Throwing",
+			"type": "boolean",
+			"desc": "",
+			"show": true,
+			"sid": 323320452343999
+		}
+	],
+	"behaviorTypes": [
+		{
+			"behaviorId": "Sin",
+			"name": "Sine",
+			"sid": 271051468127266
+		}
+	],
+	"effectTypes": [
+		{
+			"effectId": "skymen_BetterOutline",
+			"name": "OutlineStacked"
+		},
+		{
+			"effectId": "ultimatedropshadowcolor",
+			"name": "Shadow"
+		},
+		{
+			"effectId": "hsladjust",
+			"name": "AdjustHSL"
+		}
+	],
+	"image": {
+		"width": 497,
+		"height": 475,
+		"originX": 0.5,
+		"originY": 0.5,
+		"originalSource": "",
+		"exportFormat": "lossless",
+		"exportQuality": 0.8,
+		"imageSpriteId": 9016739,
+		"useCollisionPoly": true,
+		"tag": ""
+	}
+}

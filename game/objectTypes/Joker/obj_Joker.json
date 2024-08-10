@@ -1,0 +1,97 @@
+{
+	"name": "obj_Joker",
+	"plugin-id": "TiledBg",
+	"sid": 378036925678050,
+	"isGlobal": false,
+	"instanceVariables": [
+		{
+			"name": "HandPosition",
+			"type": "number",
+			"desc": "",
+			"show": true,
+			"sid": 713586924135234
+		},
+		{
+			"name": "TargetX",
+			"type": "number",
+			"desc": "",
+			"show": true,
+			"sid": 819318436720260
+		},
+		{
+			"name": "TargetY",
+			"type": "number",
+			"desc": "",
+			"show": true,
+			"sid": 190966095155266
+		},
+		{
+			"name": "SessionId",
+			"type": "string",
+			"desc": "",
+			"show": true,
+			"sid": 685222368303611
+		},
+		{
+			"name": "Id",
+			"type": "number",
+			"desc": "",
+			"show": true,
+			"sid": 533668565126137
+		},
+		{
+			"name": "Name",
+			"type": "string",
+			"desc": "",
+			"show": true,
+			"sid": 913803484692568
+		},
+		{
+			"name": "Selected",
+			"type": "boolean",
+			"desc": "",
+			"show": true,
+			"sid": 991578808336547
+		},
+		{
+			"name": "Moving",
+			"type": "boolean",
+			"desc": "",
+			"show": true,
+			"sid": 406466411523555
+		}
+	],
+	"behaviorTypes": [
+		{
+			"behaviorId": "Sin",
+			"name": "Sine",
+			"sid": 698210910382169
+		}
+	],
+	"effectTypes": [
+		{
+			"effectId": "skymen_BetterOutline",
+			"name": "BetterOutline"
+		},
+		{
+			"effectId": "ultimatedropshadowcolor",
+			"name": "Shadow"
+		},
+		{
+			"effectId": "hsladjust",
+			"name": "AdjustHSL"
+		}
+	],
+	"image": {
+		"width": 710,
+		"height": 1520,
+		"originX": 0.5,
+		"originY": 0.5,
+		"originalSource": "",
+		"exportFormat": "lossless",
+		"exportQuality": 0.8,
+		"imageSpriteId": 3047932,
+		"useCollisionPoly": true,
+		"tag": ""
+	}
+}

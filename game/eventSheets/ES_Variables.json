@@ -1,0 +1,160 @@
+{
+	"name": "ES_Variables",
+	"events": [
+		{
+			"eventType": "variable",
+			"name": "CARD_WIDTH",
+			"type": "number",
+			"initialValue": "71",
+			"comment": "",
+			"isStatic": false,
+			"isConstant": true,
+			"sid": 302397089878142
+		},
+		{
+			"eventType": "variable",
+			"name": "CARD_HEIGHT",
+			"type": "number",
+			"initialValue": "95",
+			"comment": "",
+			"isStatic": false,
+			"isConstant": true,
+			"sid": 869522069192762
+		},
+		{
+			"eventType": "variable",
+			"name": "CARD_DEFAULT_SCALE",
+			"type": "number",
+			"initialValue": "100",
+			"comment": "110",
+			"isStatic": false,
+			"isConstant": true,
+			"sid": 774760870444422
+		},
+		{
+			"eventType": "variable",
+			"name": "CARD_ENEMY_DEFAULT_SCALE",
+			"type": "number",
+			"initialValue": "75",
+			"comment": "110",
+			"isStatic": false,
+			"isConstant": true,
+			"sid": 199700719496124
+		},
+		{
+			"eventType": "variable",
+			"name": "CARD_OUTLINE_WIDTH",
+			"type": "number",
+			"initialValue": "4",
+			"comment": "",
+			"isStatic": false,
+			"isConstant": true,
+			"sid": 549531427379498
+		},
+		{
+			"eventType": "variable",
+			"name": "CARD_OFFSET_Y_BOTTOM",
+			"type": "number",
+			"initialValue": "135",
+			"comment": "",
+			"isStatic": false,
+			"isConstant": true,
+			"sid": 269110897680143
+		},
+		{
+			"eventType": "variable",
+			"name": "MAX_SELECTED_CARDS",
+			"type": "number",
+			"initialValue": "4",
+			"comment": "",
+			"isStatic": false,
+			"isConstant": true,
+			"sid": 865997901088538
+		},
+		{
+			"eventType": "comment",
+			"text": ""
+		},
+		{
+			"eventType": "variable",
+			"name": "SelectedFakeCardValue",
+			"type": "string",
+			"initialValue": "",
+			"comment": "",
+			"isStatic": false,
+			"isConstant": false,
+			"sid": 897635038852958
+		},
+		{
+			"eventType": "variable",
+			"name": "AvailableToCheck",
+			"type": "boolean",
+			"initialValue": "false",
+			"comment": "",
+			"isStatic": false,
+			"isConstant": false,
+			"sid": 968888942836375
+		},
+		{
+			"eventType": "variable",
+			"name": "AvailableToPlay",
+			"type": "boolean",
+			"initialValue": "false",
+			"comment": "",
+			"isStatic": false,
+			"isConstant": false,
+			"sid": 150237600666094
+		},
+		{
+			"eventType": "variable",
+			"name": "AvailableToDrop",
+			"type": "boolean",
+			"initialValue": "false",
+			"comment": "",
+			"isStatic": false,
+			"isConstant": false,
+			"sid": 580714245840724
+		},
+		{
+			"eventType": "variable",
+			"name": "PlayingCards",
+			"type": "boolean",
+			"initialValue": "false",
+			"comment": "",
+			"isStatic": false,
+			"isConstant": false,
+			"sid": 120767078035149
+		},
+		{
+			"eventType": "variable",
+			"name": "CheckingTable",
+			"type": "boolean",
+			"initialValue": "false",
+			"comment": "",
+			"isStatic": false,
+			"isConstant": false,
+			"sid": 183774786854675
+		},
+		{
+			"eventType": "variable",
+			"name": "DeselectCards",
+			"type": "boolean",
+			"initialValue": "false",
+			"comment": "",
+			"isStatic": false,
+			"isConstant": false,
+			"sid": 806711007820277
+		},
+		{
+			"eventType": "variable",
+			"name": "HIDDEN_CARD_COLOR",
+			"type": "string",
+			"initialValue": "Gradient",
+			"comment": "",
+			"isStatic": false,
+			"isConstant": true,
+			"sid": 467966457391083
+		}
+	],
+	"sid": 247429592176954
+}

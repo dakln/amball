@@ -1,0 +1,15 @@
+{
+	"name": "Server",
+	"plugin-id": "Colyseus_SDK",
+	"sid": 409532297002888,
+	"isGlobal": true,
+	"instanceVariables": [
+		{
+			"name": "Version",
+			"type": "string",
+			"desc": "",
+			"show": true,
+			"sid": 897978712478243
+		}
+	]
+}
