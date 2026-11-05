@@ -16,7 +16,7 @@ export const app = createApp({
   plans,
   scenes,
   firstScene: 'menu',
-  viewport: { width: VIEW_WIDTH, height: VIEW_HEIGHT, mode: 'fit' },
+  viewport: { width: VIEW_WIDTH, height: VIEW_HEIGHT, mode: 'fill' },
   background: '#17352b',
   scaleMode: 'nearest',
   resolution: 'device',

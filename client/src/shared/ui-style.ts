@@ -9,7 +9,12 @@ export const RED = 0xff7a66;
 
 export const THEME = { font: assets.font, size: 14, color: INK };
 
-const SHADOW = { shadowColor: 0x000000, shadowSize: 1, shadowAlpha: 0.55, shadowOffset: { x: 0, y: 3 } };
+const SHADOW = {
+  shadowColor: 0x000000,
+  shadowSize: 1,
+  shadowAlpha: 0.55,
+  shadowOffset: { x: 0, y: 3 },
+};
 
 export const PANEL: Engine.PanelStyle = {
   color: 0x14221f,

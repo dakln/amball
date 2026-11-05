@@ -1,9 +1,10 @@
 import { Room, type Client } from 'colyseus';
 
+import type { DeckType } from '@amball/contracts';
+
 import { AmballGame, GameError } from './amball-game.ts';
 import {
   MessageType,
-  type DeckType,
   type DropMessage,
   type JokerMessage,
   type PlayMessage,

@@ -1,8 +1,10 @@
 import { afterAll, beforeAll, expect, it } from 'bun:test';
 import { Client, type Room } from '@colyseus/sdk';
 
+import type { PlayerView } from '@amball/contracts';
+
 import { server } from '#config/app.config.ts';
-import { MessageType, type PlayerView } from './protocol.types.ts';
+import { MessageType } from './protocol.types.ts';
 import { REVEAL_MS } from './game.room.ts';
 
 const PORT = 25671;

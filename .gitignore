@@ -33,3 +33,5 @@ temp
 .cache
 *.tsbuildinfo
 __pycache__
+
+.storage/

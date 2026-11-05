@@ -2,14 +2,14 @@ import { useEffect, useRef, useState } from 'react';
 
 import * as Engine from '@horizon/engine';
 
-import type { DeckType } from '../../../server/src/game/protocol.types.ts';
+import type { DeckType } from '@amball/contracts';
 import { useMatch } from '../game/game.hud.tsx';
 import { match } from '@/shared/net/match.store.ts';
 import { BUTTON, DIM, GOLD, PANEL, RED, THEME } from '@/shared/ui-style.ts';
 
 const { UI } = Engine;
 
-export default function MenuUI(): React.JSX.Element {
+export default function MenuUI() {
   const app = Engine.useApp();
   const { connecting, toast } = useMatch();
   const [name, setName] = useState('');
@@ -30,9 +30,6 @@ export default function MenuUI(): React.JSX.Element {
         <UI.VBox separation={10}>
           <UI.Label ref={titleRef} size={34} color={GOLD} align='center'>
             AMBALL
-          </UI.Label>
-          <UI.Label color={DIM} align='center'>
-            Карточная игра на блеф, 2–4 игрока
           </UI.Label>
           <UI.LineEdit value={name} placeholder='Ваше имя' maxLength={16} onChange={setName} />
           <UI.HBox separation={6}>

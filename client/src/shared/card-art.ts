@@ -1,4 +1,4 @@
-import type { Card, JokerName, Rank, Suit } from '../../../server/src/game/protocol.types.ts';
+import type { Card, JokerName, Rank, Suit } from '@amball/server';
 
 export const CARD_WIDTH = 71;
 export const CARD_HEIGHT = 95;

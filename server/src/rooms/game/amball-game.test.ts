@@ -8,7 +8,7 @@ import {
   roundIncome,
   STARTING_COINS,
 } from './amball-game.ts';
-import type { Card, JokerName, Rank } from './protocol.types.ts';
+import type { Card, JokerName, CardRank } from '@amball/contracts';
 
 /** Детерминированный генератор: партия в тесте всегда одна и та же. */
 function seeded(seed = 1): () => number {
@@ -43,7 +43,7 @@ function give(game: AmballGame, id: string, name: JokerName): number {
   return joker.id;
 }
 
-function setHand(game: AmballGame, id: string, ranks: Rank[], base = 500): Card[] {
+function setHand(game: AmballGame, id: string, ranks: CardRank[], base = 500): Card[] {
   const hand = ranks.map((rank, i): Card => ({
     id: base + i,
     suit: 'Hearts',
@@ -406,7 +406,7 @@ describe('приватность', () => {
 });
 
 describe('джокеры', () => {
-  function turnWithTable(cards: Rank[] = ['6', '7', '8']): AmballGame {
+  function turnWithTable(cards: CardRank[] = ['6', '7', '8']): AmballGame {
     const game = started();
     setHand(game, 'p0', cards);
     game.play(

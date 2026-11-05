@@ -1,4 +1,4 @@
-import type { Card, PlayerView } from '../../../server/src/game/protocol.types.ts';
+import type { Card, PlayerView } from '@amball/server';
 import type { MatchSnapshot } from './net/match.store.ts';
 import { CARD_HEIGHT, CARD_WIDTH, rankOrder } from './card-art.ts';
 
@@ -47,13 +47,18 @@ export function opponentColumn(index: number, count: number): number {
 export function seatPosition(view: PlayerView, id: string): { x: number; y: number } {
   if (id === view.youId) return { x: HAND_CENTER_X, y: HAND_Y };
   const opponents = view.seats.filter((seat) => seat.id !== view.youId);
-  const index = Math.max(0, opponents.findIndex((seat) => seat.id === id));
+  const index = Math.max(
+    0,
+    opponents.findIndex((seat) => seat.id === id),
+  );
   return { x: opponentColumn(index, opponents.length), y: OPPONENT_Y };
 }
 
 /** Участники обмена по кругу: кто в игре, в порядке мест. */
 export function exchangeRing(view: PlayerView): string[] {
-  const ring = view.seats.filter((seat) => !seat.isOut && seat.cardCount > 0).map((seat) => seat.id);
+  const ring = view.seats
+    .filter((seat) => !seat.isOut && seat.cardCount > 0)
+    .map((seat) => seat.id);
   return view.direction === 1 ? ring : ring.reverse();
 }
 

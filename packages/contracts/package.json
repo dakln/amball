@@ -1,0 +1,6 @@
+{
+  "name": "@amball/contracts",
+  "exports": {
+    ".": "./index.ts"
+  }
+}

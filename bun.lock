@@ -17,6 +17,7 @@
     "client": {
       "name": "@amball/client",
       "dependencies": {
+        "@amball/contracts": "workspace:*",
         "@colyseus/sdk": "^0.18.9",
         "@horizon/ecs": "link:@horizon/ecs",
         "@horizon/engine": "link:@horizon/engine",
@@ -31,9 +32,13 @@
         "vite": "^8.0.1",
       },
     },
+    "packages/contracts": {
+      "name": "@amball/contracts",
+    },
     "server": {
       "name": "@amball/server",
       "dependencies": {
+        "@amball/contracts": "workspace:*",
         "@colyseus/schema": "^5.0.27",
         "@colyseus/tools": "^0.18.11",
         "@horizon/ecs": "link:@horizon/ecs",
@@ -49,6 +54,8 @@
   },
   "packages": {
     "@amball/client": ["@amball/client@workspace:client"],
+
+    "@amball/contracts": ["@amball/contracts@workspace:packages/contracts"],
 
     "@amball/server": ["@amball/server@workspace:server"],
 

@@ -1,7 +1,7 @@
 import * as ECS from '@horizon/ecs';
 import { RenderKit } from '@horizon/engine';
 
-import type { JokerEvent, JokerName } from '../../../server/src/game/protocol.types.ts';
+import type { JokerEvent, JokerName } from '@amball/server';
 import { assets } from '@/shared/assets/amball.assets.ts';
 import { match } from '@/shared/net/match.store.ts';
 import { BACK_REGION, JOKERS } from '@/shared/card-art.ts';

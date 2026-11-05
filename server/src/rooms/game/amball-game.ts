@@ -3,21 +3,36 @@ import type {
   CardType,
   DeckType,
   JokerCard,
-  JokerMessage,
   CardOrigin,
   JokerEvent,
   JokerName,
   Phase,
   PlayerView,
-  Rank,
+  CardRank,
   RevealView,
   ShopView,
-  Suit,
-} from './protocol.types.ts';
+  CardSuit,
+} from '@amball/contracts';
 
-const SUITS: Suit[] = ['Hearts', 'Clubs', 'Diamonds', 'Spades'];
-const RANKS_52: Rank[] = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King', 'Ace'];
-const RANKS_36: Rank[] = RANKS_52.slice(4);
+import type { JokerMessage } from './protocol.types.ts';
+
+const SUITS: CardSuit[] = ['Hearts', 'Clubs', 'Diamonds', 'Spades'];
+const RANKS_52: CardRank[] = [
+  '2',
+  '3',
+  '4',
+  '5',
+  '6',
+  '7',
+  '8',
+  '9',
+  '10',
+  'Jack',
+  'Queen',
+  'King',
+  'Ace',
+];
+const RANKS_36: CardRank[] = RANKS_52.slice(4);
 
 export const HAND_SIZE = 9;
 export const MAX_PLAY = 4;
@@ -60,8 +75,23 @@ export function roundIncome(round: number): number {
 const LOG_SIZE = 6;
 
 const JOKER_NAMES: JokerName[] = [
-  'Joker', 'Textiler', 'Cheater', 'Scout', 'Exchanger', 'TaxCollector',
-  'Dealer', 'IKnew', 'NewBreathe', 'Additive', 'Thief', 'Elector', 'Reverse', 'Spy', 'Hourglass', 'Monochrome', 'Alchemist',
+  'Joker',
+  'Textiler',
+  'Cheater',
+  'Scout',
+  'Exchanger',
+  'TaxCollector',
+  'Dealer',
+  'IKnew',
+  'NewBreathe',
+  'Additive',
+  'Thief',
+  'Elector',
+  'Reverse',
+  'Spy',
+  'Hourglass',
+  'Monochrome',
+  'Alchemist',
 ];
 
 const JOKER_TITLES: Record<JokerName, string> = {
@@ -99,7 +129,7 @@ interface Player {
 
 interface Turn {
   playerId: string;
-  rank: Rank;
+  rank: CardRank;
   cards: Card[];
 }
 
@@ -108,7 +138,7 @@ export class AmballGame {
   public round = 1;
   public currentId: string | null = null;
   public hostId: string | null = null;
-  public tableRank: Rank | null = null;
+  public tableRank: CardRank | null = null;
   public reveal: RevealView | null = null;
   public placements: string[] = [];
   /** Меняется с каждым новым ходом и витриной: по нему комната перезапускает отсчёт. */
@@ -143,7 +173,7 @@ export class AmballGame {
     private readonly random: () => number = Math.random,
   ) {}
 
-  public get ranks(): Rank[] {
+  public get ranks(): CardRank[] {
     return this.deckType === '52' ? RANKS_52 : RANKS_36;
   }
 
@@ -163,7 +193,16 @@ export class AmballGame {
 
   public addPlayer(id: string, name: string): void {
     if (this.phase !== 'lobby') throw new GameError('Игра уже идёт');
-    this.players.push({ id, name, hand: [], jokers: [], isOut: false, left: false, coins: 0, freeRerollUsed: false });
+    this.players.push({
+      id,
+      name,
+      hand: [],
+      jokers: [],
+      isOut: false,
+      left: false,
+      coins: 0,
+      freeRerollUsed: false,
+    });
     this.hostId ??= id;
   }
 
@@ -240,11 +279,14 @@ export class AmballGame {
     this.start(byId);
   }
 
-  public play(id: string, cardIds: number[], rank: Rank): void {
+  public play(id: string, cardIds: number[], rank: CardRank): void {
     const player = this.requireTurn(id);
     if (cardIds.length < 1) throw new GameError('Выберите карты');
     // Больше обычного предела можно только картами одного настоящего достоинства.
-    if (cardIds.length > MAX_PLAY && new Set(this.findInHand(player, cardIds).map((c) => c.rank)).size !== 1) {
+    if (
+      cardIds.length > MAX_PLAY &&
+      new Set(this.findInHand(player, cardIds).map((c) => c.rank)).size !== 1
+    ) {
       throw new GameError(`Больше ${MAX_PLAY} карт можно положить только одного достоинства`);
     }
     if (!this.ranks.includes(rank)) throw new GameError('Такого достоинства нет в колоде');
@@ -280,7 +322,8 @@ export class AmballGame {
 
   public drop(id: string, cardIds: number[]): void {
     const player = this.requireTurn(id);
-    if (cardIds.length !== DROP_SIZE) throw new GameError(`Сбросить можно ровно ${DROP_SIZE} карты`);
+    if (cardIds.length !== DROP_SIZE)
+      throw new GameError(`Сбросить можно ровно ${DROP_SIZE} карты`);
     const selected = this.findInHand(player, cardIds);
     if (new Set(selected.map((card) => card.rank)).size !== 1) {
       throw new GameError('Карты должны быть одного достоинства');
@@ -359,7 +402,8 @@ export class AmballGame {
 
   public shopBuy(id: string, slot: number): void {
     const { player, entry, offer } = this.requireOffer(id, slot);
-    if (player.jokers.length >= MAX_JOKERS) throw new GameError(`Больше ${MAX_JOKERS} джокеров держать нельзя`);
+    if (player.jokers.length >= MAX_JOKERS)
+      throw new GameError(`Больше ${MAX_JOKERS} джокеров держать нельзя`);
     if (player.coins < JOKER_COSTS[offer]) throw new GameError('Не хватает монет');
     player.coins -= JOKER_COSTS[offer];
     player.jokers.push({ id: this.nextJokerId++, name: offer });
@@ -431,7 +475,10 @@ export class AmballGame {
       coins: you?.coins ?? 0,
       goldPayout: this.goldPayouts.get(id) ?? null,
       shop: you === undefined ? null : this.shopFor(you),
-      secondsLeft: this.deadlineAt === null ? null : Math.max(0, Math.ceil((this.deadlineAt - Date.now()) / 1000)),
+      secondsLeft:
+        this.deadlineAt === null
+          ? null
+          : Math.max(0, Math.ceil((this.deadlineAt - Date.now()) / 1000)),
       placements: this.placements,
       log: this.log,
     };
@@ -454,7 +501,9 @@ export class AmballGame {
 
   /** Вдвоём «Разворот» ничего не меняет, поэтому такой джокер не выпадает. */
   private jokerPool(): JokerName[] {
-    return this.withCards().length < 3 ? JOKER_NAMES.filter((name) => name !== 'Reverse') : JOKER_NAMES;
+    return this.withCards().length < 3
+      ? JOKER_NAMES.filter((name) => name !== 'Reverse')
+      : JOKER_NAMES;
   }
 
   /** Мешок: пока не вышли все виды, повторов нет; не дублирует витрину и руку игрока. */
@@ -481,14 +530,17 @@ export class AmballGame {
   }
 
   private closeShopIfDone(): void {
-    if (this.shop !== null && [...this.shop.values()].every((entry) => entry.ready)) this.closeShop();
+    if (this.shop !== null && [...this.shop.values()].every((entry) => entry.ready))
+      this.closeShop();
   }
 
   private shopFor(player: Player): ShopView | null {
     const entry = this.shop?.get(player.id);
     if (this.shop == null || entry === undefined) return null;
     return {
-      offers: entry.offers.map((name) => (name === null ? null : { name, cost: JOKER_COSTS[name] })),
+      offers: entry.offers.map((name) =>
+        name === null ? null : { name, cost: JOKER_COSTS[name] },
+      ),
       rerollCost: player.freeRerollUsed ? REROLL_COST : 0,
       ready: entry.ready,
       readyCount: [...this.shop.values()].filter((e) => e.ready).length,
@@ -496,7 +548,10 @@ export class AmballGame {
     };
   }
 
-  private requireOffer(id: string, slot: number): {
+  private requireOffer(
+    id: string,
+    slot: number,
+  ): {
     player: Player;
     entry: { offers: (JokerName | null)[]; ready: boolean };
     offer: JokerName;
@@ -509,7 +564,7 @@ export class AmballGame {
     return { player: this.player(id), entry, offer };
   }
 
-  private applyJoker(player: Player, name: JokerName, cardIds: number[], rank?: Rank): void {
+  private applyJoker(player: Player, name: JokerName, cardIds: number[], rank?: CardRank): void {
     const table = this.tableCards;
     switch (name) {
       case 'Joker': {
@@ -540,7 +595,10 @@ export class AmballGame {
           this.turns = [];
           this.tableRank = null;
           this.fxOrigin = 'table';
-          this.fxNew.set(player.id, table.map((card) => card.id));
+          this.fxNew.set(
+            player.id,
+            table.map((card) => card.id),
+          );
           this.fxTrap = table.length;
           this.addLog(`${player.name} попал в ловушку и забирает стол: ${table.length}`);
         }
@@ -556,12 +614,16 @@ export class AmballGame {
         this.stamp += 1;
         seated.forEach((p, index) => {
           p.hand = hands[(index + hands.length - 1) % hands.length]!;
-          this.fxNew.set(p.id, p.hand.map((card) => card.id));
+          this.fxNew.set(
+            p.id,
+            p.hand.map((card) => card.id),
+          );
         });
         return;
       }
       case 'TaxCollector': {
-        if (player.hand.length < 2) throw new GameError('Налогосборщик не забирает последнюю карту');
+        if (player.hand.length < 2)
+          throw new GameError('Налогосборщик не забирает последнюю карту');
         const card = this.pick(player.hand);
         player.hand = player.hand.filter((c) => c !== card);
         return;
@@ -617,11 +679,15 @@ export class AmballGame {
         const targets = this.withCards().filter((p) => p !== player);
         if (targets.length === 0) throw new GameError('Подсматривать не у кого');
         const target = this.pick(targets);
-        this.spied.set(player.id, { ownerId: target.id, cards: this.shuffle(target.hand).slice(0, SPY_CARDS) });
+        this.spied.set(player.id, {
+          ownerId: target.id,
+          cards: this.shuffle(target.hand).slice(0, SPY_CARDS),
+        });
         return;
       }
       case 'Alchemist': {
-        if (cardIds.length !== ALCHEMIST_CARDS) throw new GameError(`Выберите ровно ${ALCHEMIST_CARDS} карты`);
+        if (cardIds.length !== ALCHEMIST_CARDS)
+          throw new GameError(`Выберите ровно ${ALCHEMIST_CARDS} карты`);
         for (const card of this.findInHand(player, cardIds)) card.type = 'Gold';
         return;
       }
@@ -694,7 +760,10 @@ export class AmballGame {
     this.round += 1;
 
     const seated = this.players.filter((p) => !p.left);
-    const from = Math.max(0, seated.findIndex((p) => p.id === starterId));
+    const from = Math.max(
+      0,
+      seated.findIndex((p) => p.id === starterId),
+    );
     for (let i = 0; i < seated.length; i++) {
       const player = seated[(from + i) % seated.length]!;
       if (!player.isOut) this.draw(player, HAND_SIZE - player.hand.length);
@@ -737,7 +806,8 @@ export class AmballGame {
     const seats = this.players;
     const from = seats.findIndex((p) => p.id === fromId);
     for (let step = 1; step <= seats.length; step++) {
-      const player = seats[(from + step * this.direction + seats.length * seats.length) % seats.length]!;
+      const player =
+        seats[(from + step * this.direction + seats.length * seats.length) % seats.length]!;
       if (!player.left && !player.isOut && player.hand.length > 0) return player.id;
     }
     return null;
@@ -781,7 +851,7 @@ export class AmballGame {
     }
   }
 
-  private createCard(suit: Suit, rank: Rank, type: CardType): Card {
+  private createCard(suit: CardSuit, rank: CardRank, type: CardType): Card {
     return { id: this.nextCardId++, suit, rank, type };
   }
 

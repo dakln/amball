@@ -8,6 +8,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@amball/contracts": "workspace:*",
     "@colyseus/sdk": "^0.18.9",
     "@horizon/ecs": "link:@horizon/ecs",
     "@horizon/engine": "link:@horizon/engine",

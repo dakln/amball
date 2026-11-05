@@ -1,6 +1,7 @@
 import { Client, type Room } from '@colyseus/sdk';
 
 import {
+  type server,
   MessageType,
   type Card,
   type DeckType,
@@ -8,7 +9,7 @@ import {
   type JokerName,
   type PlayerView,
   type Rank,
-} from '../../../server/src/game/protocol.types.ts';
+} from '@amball/server';
 
 const SERVER_URL =
   (import.meta.env['VITE_SERVER_URL'] as string | undefined) ??
@@ -62,10 +63,14 @@ class MatchStore {
 
   public getSnapshot = (): MatchSnapshot => this.snapshot;
 
-  public async enter(mode: 'create' | 'find', username: string, deckType: DeckType): Promise<boolean> {
+  public async enter(
+    mode: 'create' | 'find',
+    username: string,
+    deckType: DeckType,
+  ): Promise<boolean> {
     this.set({ connecting: true });
     try {
-      const client = new Client(SERVER_URL);
+      const client = new Client<typeof server>(SERVER_URL);
       const options = { username, deckType };
       const room = await (mode === 'create'
         ? client.create('game', options)
@@ -187,7 +192,10 @@ class MatchStore {
       view,
       breathing: view.currentId === view.youId ? this.snapshot.breathing : null,
       selected: this.snapshot.selected.filter((id) => inHand.has(id)),
-      pickedRank: view.tableRank === null && this.snapshot.view?.tableRank !== null ? null : this.snapshot.pickedRank,
+      pickedRank:
+        view.tableRank === null && this.snapshot.view?.tableRank !== null
+          ? null
+          : this.snapshot.pickedRank,
     });
   }
 
