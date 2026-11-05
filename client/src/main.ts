@@ -1,5 +1,3 @@
-async function boot(): Promise<void> {
-  return new Promise<void>(() => {});
-}
+import { boot } from '@/app/boot.ts';
 
 void boot();
