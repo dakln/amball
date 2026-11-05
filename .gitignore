@@ -1,0 +1,35 @@
+node_modules
+
+# output
+out
+dist
+dist-ssr
+.wrangler
+.next
+next-env.d.ts
+*.tgz
+*.local
+
+# code coverage
+coverage
+*.lcov
+
+# logs
+logs
+_.log
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# dotenv environment variable files
+.env
+.env.*
+
+# caches
+temp
+.cache
+*.tsbuildinfo
+__pycache__
