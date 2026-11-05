@@ -1,0 +1,29 @@
+{
+  "name": "@amball/server",
+  "type": "module",
+  "main": "src/main.ts",
+  "exports": {
+    ".": "./src/exports.ts"
+  },
+  "imports": {
+    "#*": "./src/*"
+  },
+  "scripts": {
+    "dev": "bun --watch src/main.ts",
+    "start": "bun src/cluster.ts",
+    "test": "bun test",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@colyseus/schema": "^5.0.27",
+    "@colyseus/tools": "^0.18.11",
+    "@horizon/ecs": "link:@horizon/ecs",
+    "colyseus": "^0.18.10",
+    "msgpackr": "^2.0.1"
+  },
+  "devDependencies": {
+    "@colyseus/loadtest": "^0.18.4",
+    "@colyseus/sdk": "^0.18.9",
+    "@colyseus/testing": "^0.18.6"
+  }
+}

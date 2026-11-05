@@ -1,0 +1,25 @@
+{
+  "name": "@amball/client",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "share": "tsc --noEmit && vite build && vite preview",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@colyseus/sdk": "^0.18.9",
+    "@horizon/ecs": "link:@horizon/ecs",
+    "@horizon/engine": "link:@horizon/engine",
+    "pixi.js": "8.17.0",
+    "react": "19.2.6"
+  },
+  "devDependencies": {
+    "@amball/server": "workspace:*",
+    "@types/react": "^19.2.14",
+    "@vitejs/plugin-react": "^6.0.1",
+    "typescript": "^5.9.3",
+    "vite": "^8.0.1"
+  },
+  "type": "module"
+}
